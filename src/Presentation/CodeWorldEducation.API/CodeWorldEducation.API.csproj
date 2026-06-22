@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CodeWorldEducation.Application\CodeWorldEducation.Application.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\CodeWorldEducation.Persistence\CodeWorldEducation.Persistence.csproj" />
     <ProjectReference Include="..\..\Infrastructure\CodeWorldEducation.Infrastructure\CodeWorldEducation.Infrastructure.csproj" />
   </ItemGroup>
 
