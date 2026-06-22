@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Domain.Entities
 {
-    public class Category:BaseEntity
+    public class MentorCourse : BaseEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int DisplayOrder { get; set; }
-        public ICollection<Course> Courses { get; set; }
+        public int MentorId { get; set; }
+        public int CourseId { get; set; }
+        public Mentor Mentor { get; set; }
+        public Course Course { get; set; }
     }
 }

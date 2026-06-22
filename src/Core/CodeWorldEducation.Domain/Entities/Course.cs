@@ -18,6 +18,9 @@ namespace CodeWorldEducation.Domain.Entities
         public TeachingMode TeachingMode { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public ICollection<MentorCourse> MentorCourses { get; set; }
+        public ICollection<Alumni> Alumni { get; set; }
+        public ICollection<SyllabusItem> SyllabusItems { get; set; }
 
     }
 }
