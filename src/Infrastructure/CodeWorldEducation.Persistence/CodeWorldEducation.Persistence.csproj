@@ -5,6 +5,10 @@
     <ProjectReference Include="..\..\Core\CodeWorldEducation.Application\CodeWorldEducation.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
