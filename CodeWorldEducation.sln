@@ -7,27 +7,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{65306056-D24
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{01579AD0-3B25-499D-951C-B0110D0CB034}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeWorldEducation.Domain", "src\Core\CodeWorldEducation.Domain\CodeWorldEducation.Domain.csproj", "{7ADB33FA-3B46-4934-9986-CE0F831B3C2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeWorldEducation.Domain", "src\Core\CodeWorldEducation.Domain\CodeWorldEducation.Domain.csproj", "{7ADB33FA-3B46-4934-9986-CE0F831B3C2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeWorldEducation.Application", "src\Core\CodeWorldEducation.Application\CodeWorldEducation.Application.csproj", "{02E09F1E-10A8-42A5-B0FC-7970146E0F52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeWorldEducation.Application", "src\Core\CodeWorldEducation.Application\CodeWorldEducation.Application.csproj", "{02E09F1E-10A8-42A5-B0FC-7970146E0F52}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{301DF815-9507-4DB6-ABF1-AA855A304984}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeWorldEducation.Persistence", "src\Infrastructure\CodeWorldEducation.Persistence\CodeWorldEducation.Persistence.csproj", "{DC349FFA-6251-400B-A7B8-59AC8BA658BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeWorldEducation.Persistence", "src\Infrastructure\CodeWorldEducation.Persistence\CodeWorldEducation.Persistence.csproj", "{DC349FFA-6251-400B-A7B8-59AC8BA658BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeWorldEducation.Infrastructure", "src\Infrastructure\CodeWorldEducation.Infrastructure\CodeWorldEducation.Infrastructure.csproj", "{6BA7DA9B-52E7-434C-8406-CAE055508DDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeWorldEducation.Infrastructure", "src\Infrastructure\CodeWorldEducation.Infrastructure\CodeWorldEducation.Infrastructure.csproj", "{6BA7DA9B-52E7-434C-8406-CAE055508DDC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{381E6426-DF25-4BF6-9E66-C0F8AE81774B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeWorldEducation.API", "src\Presentation\CodeWorldEducation.API\CodeWorldEducation.API.csproj", "{921AA975-D60D-4195-B690-265355104322}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeWorldEducation.API", "src\Presentation\CodeWorldEducation.API\CodeWorldEducation.API.csproj", "{921AA975-D60D-4195-B690-265355104322}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DC349FFA-6251-400B-A7B8-59AC8BA658BF} = {DC349FFA-6251-400B-A7B8-59AC8BA658BF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7ADB33FA-3B46-4934-9986-CE0F831B3C2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -50,6 +50,9 @@ Global
 		{921AA975-D60D-4195-B690-265355104322}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{921AA975-D60D-4195-B690-265355104322}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{921AA975-D60D-4195-B690-265355104322}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{01579AD0-3B25-499D-951C-B0110D0CB034} = {65306056-D245-4426-AA32-FAEA57DF082C}
