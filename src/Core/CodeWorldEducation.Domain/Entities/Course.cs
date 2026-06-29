@@ -21,6 +21,8 @@ namespace CodeWorldEducation.Domain.Entities
         public ICollection<MentorCourse> MentorCourses { get; set; }
         public ICollection<Alumni> Alumni { get; set; }
         public ICollection<SyllabusItem> SyllabusItems { get; set; }
+        public ICollection<Application> Applications { get; set; }
+
 
     }
 }

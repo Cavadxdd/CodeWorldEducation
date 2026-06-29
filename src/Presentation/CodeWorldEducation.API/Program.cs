@@ -1,4 +1,5 @@
-using CodeWorldEducation.Persistence.ServiceRegistration;
+using CodeWorldEducation.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
