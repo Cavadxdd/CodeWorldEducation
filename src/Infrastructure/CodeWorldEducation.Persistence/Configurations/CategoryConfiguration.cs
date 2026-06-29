@@ -15,14 +15,29 @@ namespace CodeWorldEducation.Persistence.Configurations
         {
             builder.ToTable("Categories");
 
-            builder.HasKey(c => c.Id);
+            builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.CreatedAt).IsRequired();
+            builder.Property(e => e.UpdatedAt).IsRequired();
+            builder.Property(e => e.IsDeleted).IsRequired().HasDefaultValue(false);
+            builder.HasQueryFilter(e => !e.IsDeleted);
 
             builder.Property(c => c.Name)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.Property(c => c.DisplayOrder)
-                .IsRequired();
+            builder.Property(c => c.Slug)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.HasIndex(c => c.Slug)
+                .IsUnique();
+
+            builder.Property(c => c.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            
         }
     }
 }

@@ -8,7 +8,7 @@ namespace CodeWorldEducation.Domain.Enums
 {
     public enum ApplicantType
     {
-        Student = 0,
-        Intern = 1
+        Student =0,
+        Intern
     }
 }

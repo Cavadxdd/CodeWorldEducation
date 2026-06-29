@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Domain.Enums
 {
-    public enum TeachingMode
+    public enum AlumniType
     {
-        InPerson = 0,
-        Online,
-        Both
+        Student = 0,
+        Intern = 1
     }
 }

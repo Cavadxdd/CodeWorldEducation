@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Application.Common.Alumni
 {
-    public class GetAlumniDto
+    public class UpdateAlumniDto
     {
         public int Id { get; set; }
         public string FullName { get; set; }
@@ -21,5 +21,6 @@ namespace CodeWorldEducation.Application.Common.Alumni
         public string? ProjectUrl { get; set; }
         public string? Testimonial { get; set; }
         public DateTime? GraduatedAt { get; set; }
+        public bool IsActive { get; set; }
     }
 }

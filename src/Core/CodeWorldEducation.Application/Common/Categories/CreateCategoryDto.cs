@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeWorldEducation.Application.Common.Categories
+namespace CodeWorldEducation.Application.Common.Category
 {
-    public class GetCategoryDto
+    public class CreateCategoryDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public int DisplayOrder { get; set; }
+        public string Slug { get; set; }
     }
 }
