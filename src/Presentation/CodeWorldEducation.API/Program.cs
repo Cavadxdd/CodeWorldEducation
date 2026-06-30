@@ -1,8 +1,12 @@
+
 using CodeWorldEducation.Persistence.Contexts;
-using CodeWorldEducation.Persistence.ServiceRegistration;
+
 using Microsoft.EntityFrameworkCore;
 using CodeWorldEducation.Infrastructure;
 using CodeWorldEducation.Application;
+
+
+using CodeWorldEducation.Persistence;
 
 
 var builder = WebApplication.CreateBuilder(args);

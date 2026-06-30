@@ -11,18 +11,30 @@ namespace CodeWorldEducation.Domain.Entities
     public class Course:BaseEntity
     {
         public string Name { get; set; }
-        public string ShortDescription { get; set; }
-        public string DetailedDescription { get; set; }
+        public string Slug { get; set; }
+        public string Description { get; set; }
         public string Duration { get; set; }
         public string Intensity { get; set; }
         public TeachingMode TeachingMode { get; set; }
+        public string? ThumbnailUrl { get; set; }
+        public bool IsActive { get; set; }
+        public int SortOrder { get; set; }
         public int CategoryId { get; set; }
+
         public Category Category { get; set; }
+
 		public ICollection<Application> Applications { get; set; } = new HashSet<Application>();
 		public ICollection<MentorCourse> MentorCourses { get; set; }
         public ICollection<Alumni> Alumni { get; set; }
         public ICollection<SyllabusItem> SyllabusItems { get; set; }
         public ICollection<Application> Applications { get; set; } = new List<Application>();
+
+        public ICollection<SyllabusItem> SyllabusItems { get; set; }
+        public ICollection<MentorCourse> MentorCourses { get; set; }
+        public ICollection<Alumni> Alumni { get; set; }
+        public ICollection<Application> Applications { get; set; }
+
+
 
     }
 }

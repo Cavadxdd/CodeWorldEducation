@@ -16,34 +16,47 @@ namespace CodeWorldEducation.Persistence.Configurations
             builder.ToTable("Alumni");
 
             builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.CreatedAt).IsRequired();
+            builder.Property(e => e.UpdatedAt).IsRequired();
+            builder.Property(e => e.IsDeleted).IsRequired().HasDefaultValue(false);
             builder.HasQueryFilter(e => !e.IsDeleted);
 
-            builder.Property(a => a.FirstName)
+            builder.Property(a => a.FullName)
                 .IsRequired()
-                .HasMaxLength(100);
-
-            builder.Property(a => a.LastName)
-                .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(150);
 
             builder.Property(a => a.PhotoUrl)
+                .HasMaxLength(255);
+
+            builder.Property(a => a.AlumniType)
+                .IsRequired();
+
+            builder.Property(a => a.CompletedCourse)
                 .IsRequired()
-                .HasMaxLength(500);
+                .HasMaxLength(150);
 
             builder.Property(a => a.CurrentCompany)
-                .IsRequired()
-                .HasMaxLength(200);
+                .HasMaxLength(150);
 
-            builder.Property(a => a.PortfolioUrl)
+            builder.Property(a => a.CurrentPosition)
+                .HasMaxLength(150);
+
+            builder.Property(a => a.GitHubUrl)
+                .HasMaxLength(255);
+
+            builder.Property(a => a.BehanceUrl)
+                .HasMaxLength(255);
+
+            builder.Property(a => a.ProjectUrl)
+                .HasMaxLength(255);
+
+            builder.Property(a => a.Testimonial)
                 .HasMaxLength(500);
 
-            builder.Property(a => a.TestimonialText)
-                .HasMaxLength(1000);
-
-            builder.HasOne(a => a.Course)
-                .WithMany(c => c.Alumni)
-                .HasForeignKey(a => a.CourseId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(a => a.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
         }
     }
 }

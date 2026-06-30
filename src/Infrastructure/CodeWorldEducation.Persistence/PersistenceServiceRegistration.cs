@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeWorldEducation.Persistence.ServiceRegistration
+namespace CodeWorldEducation.Persistence
 {
     public static class PersistenceServiceRegistration
     {

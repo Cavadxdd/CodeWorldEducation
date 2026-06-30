@@ -1,20 +1,17 @@
-﻿using CodeWorldEducation.Domain.Entities.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeWorldEducation.Domain.Entities
+namespace CodeWorldEducation.Application.Common.SyllabusItem
 {
-    public class SyllabusItem : BaseEntity
+    public class CreateSyllabusItemDto
     {
         public string Title { get; set; }
         public string Content { get; set; }
         public int OrderIndex { get; set; }
         public int? WeekNumber { get; set; }
         public int CourseId { get; set; }
-
-        public Course Course { get; set; }
     }
 }
