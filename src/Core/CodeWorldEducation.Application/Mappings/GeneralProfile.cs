@@ -9,4 +9,4 @@ public class GeneralProfile : Profile
         // Mapping-lər sonra əlavə ediləcək
         // CreateMap<Course, CourseDto>();  
     }
-}
+}   
