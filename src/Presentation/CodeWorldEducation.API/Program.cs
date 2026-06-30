@@ -1,6 +1,10 @@
 using CodeWorldEducation.Persistence.Contexts;
 using CodeWorldEducation.Persistence.ServiceRegistration;
 using Microsoft.EntityFrameworkCore;
+using CodeWorldEducation.Infrastructure;
+using CodeWorldEducation.Application;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -8,6 +12,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 
+builder.Services.AddInfrastructureServices();
+builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
