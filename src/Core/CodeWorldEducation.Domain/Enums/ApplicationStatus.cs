@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Domain.Enums
 {
-    public enum TeachingMode
+    public enum ApplicationStatus
     {
-        InPerson = 0,
-        Online,
-        Both
+        New = 0,
+        Reviewed = 1,
+        Contacted = 2,
+        Rejected = 3
     }
 }

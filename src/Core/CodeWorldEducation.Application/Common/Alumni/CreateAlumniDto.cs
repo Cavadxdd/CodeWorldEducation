@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Application.Common.Alumni
 {
-    public class GetAlumniDto
+    public class CreateAlumniDto
     {
-        public int Id { get; set; }
         public string FullName { get; set; }
         public string? PhotoUrl { get; set; }
         public AlumniType AlumniType { get; set; }

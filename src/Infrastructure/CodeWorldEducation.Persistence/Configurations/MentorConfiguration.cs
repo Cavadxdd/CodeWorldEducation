@@ -17,27 +17,39 @@ namespace CodeWorldEducation.Persistence.Configurations
 
             builder.HasKey(e => e.Id);
 
+            builder.Property(e => e.CreatedAt).IsRequired();
+            builder.Property(e => e.UpdatedAt).IsRequired();
+            builder.Property(e => e.IsDeleted).IsRequired().HasDefaultValue(false);
             builder.HasQueryFilter(e => !e.IsDeleted);
 
-            builder.Property(m => m.FirstName)
+            builder.Property(m => m.FullName)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(150);
 
-            builder.Property(m => m.LastName)
+            builder.Property(m => m.Position)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(150);
 
             builder.Property(m => m.PhotoUrl)
                 .IsRequired()
+                .HasMaxLength(255);
+
+            builder.Property(m => m.LinkedInUrl)
+                .HasMaxLength(255);
+
+            builder.Property(m => m.Technologies)
+                .IsRequired();
+
+            builder.Property(m => m.Bio)
                 .HasMaxLength(500);
 
-            builder.Property(m => m.Designation)
+            builder.Property(m => m.IsActive)
                 .IsRequired()
-                .HasMaxLength(200);
+                .HasDefaultValue(true);
 
-            builder.Property(m => m.LinkedinUrl)
+            builder.Property(m => m.SortOrder)
                 .IsRequired()
-                .HasMaxLength(500);
+                .HasDefaultValue(0);
         }
     }
 }

@@ -15,29 +15,48 @@ namespace CodeWorldEducation.Persistence.Configurations
         {
             builder.ToTable("Courses");
 
-            builder.HasKey(c => c.Id);
+            builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.CreatedAt).IsRequired();
+            builder.Property(e => e.UpdatedAt).IsRequired();
+            builder.Property(e => e.IsDeleted).IsRequired().HasDefaultValue(false);
+            builder.HasQueryFilter(e => !e.IsDeleted);
 
             builder.Property(c => c.Name)
                 .IsRequired()
-                .HasMaxLength(200);
+                .HasMaxLength(150);
 
-            builder.Property(c => c.ShortDescription)
+            builder.Property(c => c.Slug)
                 .IsRequired()
-                .HasMaxLength(500);
+                .HasMaxLength(100);
 
-            builder.Property(c => c.DetailedDescription)
+            builder.HasIndex(c => c.Slug)
+                .IsUnique();
+
+            builder.Property(c => c.Description)
                 .IsRequired();
 
             builder.Property(c => c.Duration)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(50);
 
             builder.Property(c => c.Intensity)
                 .IsRequired()
-                .HasMaxLength(200);
+                .HasMaxLength(100);
 
             builder.Property(c => c.TeachingMode)
                 .IsRequired();
+
+            builder.Property(c => c.ThumbnailUrl)
+                .HasMaxLength(255);
+
+            builder.Property(c => c.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            builder.Property(c => c.SortOrder)
+                .IsRequired()
+                .HasDefaultValue(0);
 
             builder.HasOne(c => c.Category)
                 .WithMany(cat => cat.Courses)

@@ -16,6 +16,10 @@ namespace CodeWorldEducation.Persistence.Configurations
             builder.ToTable("SyllabusItems");
 
             builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.CreatedAt).IsRequired();
+            builder.Property(e => e.UpdatedAt).IsRequired();
+            builder.Property(e => e.IsDeleted).IsRequired().HasDefaultValue(false);
             builder.HasQueryFilter(e => !e.IsDeleted);
 
             builder.Property(s => s.Title)
@@ -27,6 +31,8 @@ namespace CodeWorldEducation.Persistence.Configurations
 
             builder.Property(s => s.OrderIndex)
                 .IsRequired();
+
+            builder.Property(s => s.WeekNumber);
 
             builder.HasOne(s => s.Course)
                 .WithMany(c => c.SyllabusItems)
