@@ -1,7 +1,12 @@
-﻿using CodeWorldEducation.Persistence.Contexts;
+﻿using CodeWorldEducation.Application.Repositories;
+using CodeWorldEducation.Application.UnitOfWorks;
+using CodeWorldEducation.Persistence.Contexts;
+using CodeWorldEducation.Persistence.Repositories;
+using CodeWorldEducation.Persistence.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +24,12 @@ namespace CodeWorldEducation.Persistence.ServiceRegistration
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("Default")));
 
-            return services;
+			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+			return services;
         }
+
     }
 }

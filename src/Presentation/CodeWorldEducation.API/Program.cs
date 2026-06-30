@@ -1,5 +1,6 @@
-using CodeWorldEducation.Infrastructure;
+using CodeWorldEducation.Persistence.Contexts;
 using CodeWorldEducation.Persistence.ServiceRegistration;
+using Microsoft.EntityFrameworkCore;
 using CodeWorldEducation.Infrastructure;
 using CodeWorldEducation.Application;
 
@@ -14,6 +15,12 @@ builder.Services.AddControllers();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+  
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+});
+ 
 
 var app = builder.Build();
 
