@@ -1,7 +1,9 @@
-﻿using CodeWorldEducation.Application.Repositories;
+﻿using CodeWorldEducation.Application.Abstraction.Services;
+using CodeWorldEducation.Application.Repositories;
 using CodeWorldEducation.Application.UnitOfWorks;
 using CodeWorldEducation.Domain.Entities;
 using CodeWorldEducation.Persistence.Contexts;
+using CodeWorldEducation.Persistence.Implementations;
 using CodeWorldEducation.Persistence.Repositories;
 using CodeWorldEducation.Persistence.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +35,8 @@ public static class PersistenceServiceRegistration
 
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<ICategoryService, CategoryService>();
 
         return services;
     }
