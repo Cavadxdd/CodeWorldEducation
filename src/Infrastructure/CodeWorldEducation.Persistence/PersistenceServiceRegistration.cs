@@ -39,6 +39,7 @@ public static class PersistenceServiceRegistration
 
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ICourseService, CourseService>();
+        services.AddScoped<IApplicationService, ApplicationService>();
 
         return services;
     }

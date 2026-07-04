@@ -12,6 +12,7 @@ namespace CodeWorldEducation.Application.UnitOfWorks
 	{
         IGenericRepository<Category> CategoryRepository { get; }
         IGenericRepository<Course> CourseRepository { get; }
+        IGenericRepository<Domain.Entities.Application> ApplicationRepository { get; }
         Task<int> SaveChangesAsync();
 	}
 }
