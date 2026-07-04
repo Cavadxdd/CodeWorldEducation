@@ -20,21 +20,10 @@ namespace CodeWorldEducation.Domain.Entities
         public bool IsActive { get; set; }
         public int SortOrder { get; set; }
         public int CategoryId { get; set; }
-
         public Category Category { get; set; }
-
 		public ICollection<Application> Applications { get; set; } = new HashSet<Application>();
 		public ICollection<MentorCourse> MentorCourses { get; set; }
         public ICollection<Alumni> Alumni { get; set; }
         public ICollection<SyllabusItem> SyllabusItems { get; set; }
-        public ICollection<Application> Applications { get; set; } = new List<Application>();
-
-        public ICollection<SyllabusItem> SyllabusItems { get; set; }
-        public ICollection<MentorCourse> MentorCourses { get; set; }
-        public ICollection<Alumni> Alumni { get; set; }
-        public ICollection<Application> Applications { get; set; }
-
-
-
     }
 }

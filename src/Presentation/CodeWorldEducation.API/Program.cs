@@ -1,13 +1,51 @@
 
-using CodeWorldEducation.Persistence.Contexts;
+//using CodeWorldEducation.Persistence.Contexts;
 
-using Microsoft.EntityFrameworkCore;
-using CodeWorldEducation.Infrastructure;
+//using Microsoft.EntityFrameworkCore;
+//using CodeWorldEducation.Infrastructure;
+//using CodeWorldEducation.Application;
+
+
+//using CodeWorldEducation.Persistence;
+
+
+//var builder = WebApplication.CreateBuilder(args);
+
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
+//builder.Services.AddControllers();
+
+
+//builder.Services.AddInfrastructureServices();
+//builder.Services.AddApplicationServices();
+//builder.Services.AddPersistenceServices(builder.Configuration);
+//builder.Services.AddDbContext<AppDbContext>(opt =>
+//{
+
+//    opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+//});
+
+
+//var app = builder.Build();
+
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+//app.UseHttpsRedirection();
+//app.MapControllers();
+//app.Run();
+
+
+
 using CodeWorldEducation.Application;
-
-
+using CodeWorldEducation.Infrastructure;
 using CodeWorldEducation.Persistence;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,16 +53,31 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
-
-builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
-builder.Services.AddDbContext<AppDbContext>(opt =>
+
+builder.Services.AddAuthentication(options =>
 {
-  
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
+    };
 });
- 
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -35,5 +88,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();

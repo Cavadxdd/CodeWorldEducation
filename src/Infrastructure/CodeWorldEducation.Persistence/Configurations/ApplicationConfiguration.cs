@@ -1,6 +1,7 @@
 ﻿using CodeWorldEducation.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using CodeWorldEducation.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

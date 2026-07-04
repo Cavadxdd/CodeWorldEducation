@@ -1,35 +1,39 @@
 ﻿using CodeWorldEducation.Application.Repositories;
 using CodeWorldEducation.Application.UnitOfWorks;
+using CodeWorldEducation.Domain.Entities;
 using CodeWorldEducation.Persistence.Contexts;
 using CodeWorldEducation.Persistence.Repositories;
 using CodeWorldEducation.Persistence.UnitOfWorks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CodeWorldEducation.Persistence
+namespace CodeWorldEducation.Persistence;
+public static class PersistenceServiceRegistration
 {
-    public static class PersistenceServiceRegistration
-    {
-        public static IServiceCollection AddPersistenceServices(
+    public static IServiceCollection AddPersistenceServices(
         this IServiceCollection services,
         IConfiguration configuration)
+    {
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("Default")));
+
+        services.AddIdentity<AppUser, AppRole>(options =>
         {
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("Default")));
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 8;
+            options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedEmail = true;
+        })
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddDefaultTokenProviders();
 
-			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-			services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-			return services;
-        }
-
+        return services;
     }
 }
