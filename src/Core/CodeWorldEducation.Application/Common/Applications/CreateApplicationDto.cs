@@ -18,5 +18,7 @@ namespace CodeWorldEducation.Application.Common.Application
         public TeachingMode? TeachingMode { get; set; }
         public string? GitHubUrl { get; set; }
         public string? BehanceUrl { get; set; }
+        public string? CvFilePath { get; set; }
+        public string? CvOriginalFileName { get; set; }
     }
 }
