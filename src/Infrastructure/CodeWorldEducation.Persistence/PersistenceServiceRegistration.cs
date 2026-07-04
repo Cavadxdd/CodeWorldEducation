@@ -5,6 +5,7 @@ using CodeWorldEducation.Domain.Entities;
 using CodeWorldEducation.Persistence.Contexts;
 using CodeWorldEducation.Persistence.Implementations;
 using CodeWorldEducation.Persistence.Repositories;
+using CodeWorldEducation.Persistence.Services;
 using CodeWorldEducation.Persistence.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ICourseService, CourseService>();
 
         return services;
     }

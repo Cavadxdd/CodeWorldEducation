@@ -15,11 +15,13 @@ namespace CodeWorldEducation.Persistence.UnitOfWorks
 	{
 		private readonly AppDbContext _context;
         public IGenericRepository<Category> CategoryRepository { get; private set; }
+        public IGenericRepository<Course> CourseRepository { get; private set; }
 
         public UnitOfWork(AppDbContext context)
 		{
 			_context = context;
             CategoryRepository = new GenericRepository<Category>(_context);
+            CourseRepository = new GenericRepository<Course>(_context);
         }
 
 		public async Task<int> SaveChangesAsync()
