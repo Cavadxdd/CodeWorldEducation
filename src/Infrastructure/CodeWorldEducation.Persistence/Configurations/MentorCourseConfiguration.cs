@@ -14,7 +14,20 @@ namespace CodeWorldEducation.Persistence.Configurations
         public void Configure(EntityTypeBuilder<MentorCourse> builder)
         {
             builder.ToTable("MentorCourses");
+
             builder.HasKey(mc => new { mc.MentorId, mc.CourseId });
+
+            builder.Property(mc => mc.CreatedAt)
+                .IsRequired();
+
+            builder.Property(mc => mc.UpdatedAt)
+                .IsRequired();
+
+            builder.Property(mc => mc.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            builder.HasQueryFilter(mc => !mc.IsDeleted);
 
             builder.HasOne(mc => mc.Mentor)
                 .WithMany(m => m.MentorCourses)
