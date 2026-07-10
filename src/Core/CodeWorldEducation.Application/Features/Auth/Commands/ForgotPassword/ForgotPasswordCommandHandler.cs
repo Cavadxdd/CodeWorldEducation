@@ -2,6 +2,7 @@
 using CodeWorldEducation.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace CodeWorldEducation.Application.Features.Auth.Commands.ForgotPassword;
 
@@ -9,11 +10,13 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailService _emailService;
+    private readonly IConfiguration _configuration;
 
-    public ForgotPasswordCommandHandler(UserManager<AppUser> userManager, IEmailService emailService)
+    public ForgotPasswordCommandHandler(UserManager<AppUser> userManager, IEmailService emailService, IConfiguration configuration)
     {
         _userManager = userManager;
         _emailService = emailService;
+        _configuration = configuration;
     }
 
     public async Task<ForgotPasswordCommandResponse> Handle(
@@ -30,7 +33,10 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-         var resetLink = $"https://localhost:7001/api/auth/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
+        var baseUrl = _configuration["App:BaseUrl"];
+
+        var resetLink =
+            $"{baseUrl}/api/auth/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
 
         await _emailService.SendEmailAsync(
             user.Email!,
