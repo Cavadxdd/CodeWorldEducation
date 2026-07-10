@@ -1,4 +1,5 @@
-﻿using CodeWorldEducation.Domain.Entities;
+﻿using CodeWorldEducation.Application.Abstraction.Services;
+using CodeWorldEducation.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,10 +8,12 @@ namespace CodeWorldEducation.Application.Features.Auth.Commands.Register;
 public class RegisterCommandHandler : IRequestHandler<RegisterCommandRequest, RegisterCommandResponse>
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly IEmailService _emailService;
 
-    public RegisterCommandHandler(UserManager<AppUser> userManager)
+    public RegisterCommandHandler(UserManager<AppUser> userManager, IEmailService emailService)
     {
         _userManager = userManager;
+        _emailService = emailService;
     }
 
     public async Task<RegisterCommandResponse> Handle(
@@ -43,7 +46,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommandRequest, Re
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        // TODO: Email göndərmə burada olacaq (Google SMTP)
+        var confirmLink = $"https://localhost:7001/api/auth/confirm-email?email={user.Email}&token={Uri.EscapeDataString(token)}";
+
+        await _emailService.SendEmailAsync(
+            user.Email!,
+            "Email Təsdiqləmə",
+            $"<h3>Salam {user.FirstName}!</h3><p>Email ünvanınızı təsdiqləmək üçün <a href='{confirmLink}'>bura klikləyin</a>.</p>"
+        );
 
         return new RegisterCommandResponse
         {
