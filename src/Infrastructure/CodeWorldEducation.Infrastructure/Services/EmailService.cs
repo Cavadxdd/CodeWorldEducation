@@ -22,10 +22,10 @@ public class EmailService : IEmailService
 
     public async Task SendEmailAsync(string toEmail, string subject, string body)
     {
-        var clientId = _configuration["Gmail:ClientId"]!;
-        var clientSecret = _configuration["Gmail:ClientSecret"]!;
-        var refreshToken = _configuration["Gmail:RefreshToken"]!;
-        var senderEmail = _configuration["Gmail:SenderEmail"]!;
+        var clientId = _configuration["App:Gmail:ClientId"]!;
+        var clientSecret = _configuration["App:Gmail:ClientSecret"]!;
+        var refreshToken = _configuration["App:Gmail:RefreshToken"]!;
+        var senderEmail = _configuration["App:Gmail:SenderEmail"]!;
 
         var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
         {
