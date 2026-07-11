@@ -9,7 +9,9 @@ public static class InfrastructureServiceRegistration
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<ITokenService, TokenService>();
+		services.AddScoped<IFileService, FileService>();
+		services.AddScoped<IWhatsAppService, WhatsAppService>();
 
-        return services;
+		return services;
     }
 }
