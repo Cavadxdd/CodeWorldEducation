@@ -35,7 +35,7 @@ namespace CodeWorldEducation.Persistence.Services
 
             var alumni = await _unitOfWork.AlumniRepository.GetByIdAsync(id);
             if (alumni == null)
-                throw new Exception($"Alumni with id {id} not found");
+                throw new KeyNotFoundException($"Alumni with id {id} not found");
 
             return _mapper.Map<GetAlumniDetailDto>(alumni);
         }
@@ -54,7 +54,7 @@ namespace CodeWorldEducation.Persistence.Services
 
             var alumni = await _unitOfWork.AlumniRepository.GetDetailAsync(id);
             if (alumni == null)
-                throw new Exception($"Alumni with id {id} not found");
+                throw new KeyNotFoundException($"Alumni with id {id} not found");
 
             return _mapper.Map<GetAlumniDetailDto>(alumni);
         }
@@ -78,9 +78,9 @@ namespace CodeWorldEducation.Persistence.Services
             return _mapper.Map<GetAlumniDetailDto>(alumni);
         }
 
-        public async Task<GetAlumniDetailDto> UpdateAsync(UpdateAlumniDto dto)
+        public async Task<GetAlumniDetailDto> UpdateAsync(int id,UpdateAlumniDto dto)
         {
-            if (dto.Id <= 0)
+            if (id <= 0)
                 throw new ArgumentException("Id must be greater than 0");
 
             if (string.IsNullOrWhiteSpace(dto.FullName))
@@ -89,9 +89,9 @@ namespace CodeWorldEducation.Persistence.Services
             if (string.IsNullOrWhiteSpace(dto.CompletedCourse))
                 throw new ArgumentException("Completed course cannot be empty");
 
-            var alumni = await _unitOfWork.AlumniRepository.GetByIdAsync(dto.Id);
+            var alumni = await _unitOfWork.AlumniRepository.GetByIdAsync(id);
             if (alumni == null)
-                throw new Exception($"Alumni with id {dto.Id} not found");
+                throw new KeyNotFoundException($"Alumni with id {id} not found");
 
             _mapper.Map(dto, alumni);
             alumni.UpdatedAt = DateTime.UtcNow;
@@ -109,7 +109,7 @@ namespace CodeWorldEducation.Persistence.Services
 
             var alumni = await _unitOfWork.AlumniRepository.GetByIdAsync(id);
             if (alumni == null)
-                throw new Exception($"Alumni with id {id} not found");
+                throw new KeyNotFoundException($"Alumni with id {id} not found");
 
             _unitOfWork.AlumniRepository.Delete(alumni);
             await _unitOfWork.SaveChangesAsync();

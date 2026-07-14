@@ -52,5 +52,22 @@ namespace CodeWorldEducation.Persistence.Repositories
                     .ThenInclude(mc => mc.Mentor)
                 .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
         }
+
+
+        public async Task<List<Course>> GetAllWithCategoryAsync()
+        {
+            return await _context.Courses
+                .Include(c => c.Category)
+                .Where(c => !c.IsDeleted)
+                .OrderBy(c => c.SortOrder)
+                .ToListAsync();
+        }
+
+        public async Task<Course?> GetWithCategoryByIdAsync(int id)
+        {
+            return await _context.Courses
+                .Include(c => c.Category)
+                .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+        }
     }
 }

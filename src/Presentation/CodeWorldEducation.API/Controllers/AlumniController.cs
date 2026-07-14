@@ -5,6 +5,7 @@ using CodeWorldEducation.Application.Features.Alumni.Commands.Update;
 using CodeWorldEducation.Application.Features.Alumni.Queries.GetAllAlumni;
 using CodeWorldEducation.Application.Features.Alumni.Queries.GetAlumniDetail;
 using CodeWorldEducation.Application.Features.Alumni.Queries.GetFeaturedAlumni;
+using CodeWorldEducation.Application.Features.Mentors.Commands.Update;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,11 +53,15 @@ namespace CodeWorldEducation.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(UpdateAlumniDto dto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UpdateAlumniDto dto)
         {
-            var response = await _mediator.Send(
-                new UpdateAlumniCommandRequest { Dto = dto });
+            var response = await _mediator.Send(new UpdateAlumniCommandRequest
+            {
+                Id = id,
+                Dto = dto
+            });
+
             return Ok(response);
         }
 

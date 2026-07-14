@@ -22,7 +22,7 @@ namespace CodeWorldEducation.Application.Features.Mentors.Commands.Update
             UpdateMentorCommandRequest request,
             CancellationToken cancellationToken)
         {
-            var result = await _mentorService.UpdateAsync(request.Dto);
+            var result = await _mentorService.UpdateAsync(request.Id, request.Mentor);
             return new UpdateMentorCommandResponse { Mentor = result };
         }
     }

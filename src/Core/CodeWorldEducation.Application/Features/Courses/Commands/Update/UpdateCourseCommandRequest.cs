@@ -10,6 +10,13 @@ namespace CodeWorldEducation.Application.Features.Courses.Commands.Update
 {
     public class UpdateCourseCommandRequest : IRequest<UpdateCourseCommandResponse>
     {
+        public int Id { get; set; }
         public UpdateCourseDto Dto { get; set; }
+
+        public UpdateCourseCommandRequest(int id, UpdateCourseDto dto)
+        {
+            Id = id;
+            Dto = dto;
+        }
     }
 }

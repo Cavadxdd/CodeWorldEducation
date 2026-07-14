@@ -14,7 +14,7 @@ namespace CodeWorldEducation.Application.Abstraction.Services
         Task<List<GetAlumniDetailDto>> GetFeaturedAsync();
         Task<GetAlumniDetailDto> GetDetailAsync(int id);
         Task<GetAlumniDetailDto> CreateAsync(CreateAlumniDto dto);
-        Task<GetAlumniDetailDto> UpdateAsync(UpdateAlumniDto dto);
+        Task<GetAlumniDetailDto> UpdateAsync(int id,UpdateAlumniDto dto);
         Task DeleteAsync(int id);
     }
 }

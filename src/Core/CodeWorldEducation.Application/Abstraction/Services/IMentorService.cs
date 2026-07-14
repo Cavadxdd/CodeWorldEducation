@@ -16,7 +16,7 @@ namespace CodeWorldEducation.Application.Abstraction.Services
         Task<List<GetCourseListDto>> GetMentorCoursesAsync(int mentorId);
         Task<GetMentorDetailDto> GetDetailAsync(int id);
         Task<GetMentorDto> CreateAsync(CreateMentorDto dto);
-        Task<GetMentorDto> UpdateAsync(UpdateMentorDto dto);
+        Task<GetMentorDto> UpdateAsync(int id, UpdateMentorDto dto);
         Task DeleteAsync(int id);
     }
 }

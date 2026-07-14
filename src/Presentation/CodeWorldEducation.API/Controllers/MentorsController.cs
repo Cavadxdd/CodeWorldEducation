@@ -54,11 +54,15 @@ namespace CodeWorldEducation.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(UpdateMentorDto dto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UpdateMentorDto dto)
         {
-            var response = await _mediator.Send(
-                new UpdateMentorCommandRequest { Dto = dto });
+            var response = await _mediator.Send(new UpdateMentorCommandRequest
+            {
+                Id = id,
+                Mentor = dto
+            });
+
             return Ok(response);
         }
 

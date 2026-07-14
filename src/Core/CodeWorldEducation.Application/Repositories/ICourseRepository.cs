@@ -13,5 +13,8 @@ namespace CodeWorldEducation.Application.Repositories
         Task<List<Course>> GetByCategoryAsync(int categoryId);
         Task<List<Course>> GetWithSyllabusAsync();
         Task<Course?> GetDetailWithMentorsAsync(int id);
+
+        Task<List<Course>> GetAllWithCategoryAsync();
+        Task<Course?> GetWithCategoryByIdAsync(int id);
     }
 }

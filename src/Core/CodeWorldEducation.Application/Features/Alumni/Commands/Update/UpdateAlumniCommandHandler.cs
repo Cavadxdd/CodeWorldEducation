@@ -17,7 +17,7 @@ namespace CodeWorldEducation.Application.Features.Alumni.Commands.Update
             UpdateAlumniCommandRequest request,
             CancellationToken cancellationToken)
         {
-            var result = await _alumniService.UpdateAsync(request.Dto);
+            var result = await _alumniService.UpdateAsync(request.Id,request.Dto);
             return new UpdateAlumniCommandResponse { Alumni = result };
         }
     }

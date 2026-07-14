@@ -44,11 +44,11 @@ namespace CodeWorldEducation.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(UpdateCourseDto dto)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, UpdateCourseDto dto)
         {
-            var response = await _mediator.Send(new UpdateCourseCommandRequest { Dto = dto });
-            return Ok(response);
+            await _mediator.Send(new UpdateCourseCommandRequest(id,dto));
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

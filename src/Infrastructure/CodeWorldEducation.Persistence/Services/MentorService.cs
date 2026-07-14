@@ -37,7 +37,7 @@ namespace CodeWorldEducation.Persistence.Services
 
             var mentor = await _unitOfWork.MentorRepository.GetByIdAsync(id);
             if (mentor == null)
-                throw new Exception($"Mentor with id {id} not found");
+                throw new KeyNotFoundException($"Mentor with id {id} not found");
 
             return _mapper.Map<GetMentorDto>(mentor);
         }
@@ -49,7 +49,7 @@ namespace CodeWorldEducation.Persistence.Services
 
             var mentor = await _unitOfWork.MentorRepository.GetWithCoursesAsync(mentorId);
             if (mentor == null)
-                throw new Exception($"Mentor with id {mentorId} not found");
+                throw new KeyNotFoundException($"Mentor with id {mentorId} not found");
 
             var courses = mentor.MentorCourses.Select(mc => mc.Course).ToList();
             return _mapper.Map<List<GetCourseListDto>>(courses);
@@ -62,7 +62,7 @@ namespace CodeWorldEducation.Persistence.Services
 
             var mentor = await _unitOfWork.MentorRepository.GetByIdAsync(id);
             if (mentor == null)
-                throw new Exception($"Mentor with id {id} not found");
+                throw new KeyNotFoundException($"Mentor with id {id} not found");
 
             return _mapper.Map<GetMentorDetailDto>(mentor);
         }
@@ -92,9 +92,9 @@ namespace CodeWorldEducation.Persistence.Services
             return _mapper.Map<GetMentorDto>(mentor);
         }
 
-        public async Task<GetMentorDto> UpdateAsync(UpdateMentorDto dto)
+        public async Task<GetMentorDto> UpdateAsync(int id,UpdateMentorDto dto)
         {
-            if (dto.Id <= 0)
+            if (id <= 0)
                 throw new ArgumentException("Id must be greater than 0");
 
             if (string.IsNullOrWhiteSpace(dto.FullName))
@@ -106,9 +106,9 @@ namespace CodeWorldEducation.Persistence.Services
             if (dto.Technologies == null || dto.Technologies.Count == 0)
                 throw new ArgumentException("At least one technology must be specified");
 
-            var mentor = await _unitOfWork.MentorRepository.GetByIdAsync(dto.Id);
+            var mentor = await _unitOfWork.MentorRepository.GetByIdAsync(id);
             if (mentor == null)
-                throw new Exception($"Mentor with id {dto.Id} not found");
+                throw new KeyNotFoundException($"Mentor with id {id} not found");
 
             _mapper.Map(dto, mentor);
             mentor.UpdatedAt = DateTime.UtcNow;
@@ -126,7 +126,7 @@ namespace CodeWorldEducation.Persistence.Services
 
             var mentor = await _unitOfWork.MentorRepository.GetByIdAsync(id);
             if (mentor == null)
-                throw new Exception($"Mentor with id {id} not found");
+                throw new KeyNotFoundException($"Mentor with id {id} not found");
 
             _unitOfWork.MentorRepository.Delete(mentor);
             await _unitOfWork.SaveChangesAsync();

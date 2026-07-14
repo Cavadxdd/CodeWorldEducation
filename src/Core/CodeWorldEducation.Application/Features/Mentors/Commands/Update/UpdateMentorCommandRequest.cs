@@ -10,7 +10,8 @@ namespace CodeWorldEducation.Application.Features.Mentors.Commands.Update
 {
     public class UpdateMentorCommandRequest : IRequest<UpdateMentorCommandResponse>
     {
-        public UpdateMentorDto Dto { get; set; }
+        public int Id { get; set; }
+        public UpdateMentorDto Mentor { get; set; }
     }
 
 }

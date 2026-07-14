@@ -21,7 +21,7 @@ namespace CodeWorldEducation.Application.Features.Courses.Commands.Update
             UpdateCourseCommandRequest request,
             CancellationToken cancellationToken)
         {
-            var result = await _courseService.UpdateAsync(request.Dto);
+            var result = await _courseService.UpdateAsync(request.Id,request.Dto);
             return new UpdateCourseCommandResponse { Course = result };
         }
     }

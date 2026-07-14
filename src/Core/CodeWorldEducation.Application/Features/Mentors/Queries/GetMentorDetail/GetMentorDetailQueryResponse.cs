@@ -1,4 +1,4 @@
-﻿using CodeWorldEducation.Application.Common.Mentor;
+﻿using CodeWorldEducation.Application.Common.Mentors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace CodeWorldEducation.Application.Features.Mentors.Queries.GetMentorDetai
 {
     public class GetMentorDetailQueryResponse
     {
-        public GetMentorDto Mentor { get; set; }
+        public GetMentorDetailDto Mentor { get; set; }
     }
 }

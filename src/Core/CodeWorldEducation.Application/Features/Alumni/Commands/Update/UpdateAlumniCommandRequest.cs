@@ -10,6 +10,7 @@ namespace CodeWorldEducation.Application.Features.Alumni.Commands.Update
 {
     public class UpdateAlumniCommandRequest : IRequest<UpdateAlumniCommandResponse>
     {
+        public int Id { get; set; }
         public UpdateAlumniDto Dto { get; set; }
     }
 }
