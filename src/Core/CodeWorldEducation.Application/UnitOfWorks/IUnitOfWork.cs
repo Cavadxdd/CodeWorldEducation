@@ -11,8 +11,11 @@ namespace CodeWorldEducation.Application.UnitOfWorks
 	public interface IUnitOfWork : IAsyncDisposable
 	{
         IGenericRepository<Category> CategoryRepository { get; }
-        IGenericRepository<Course> CourseRepository { get; }
+        ICourseRepository CourseRepository { get; }
         IGenericRepository<Domain.Entities.Application> ApplicationRepository { get; }
+        IMentorRepository MentorRepository { get; }
+        IGenericRepository<MentorCourse> MentorCourseRepository { get; }
+        IAlumniRepository AlumniRepository { get; }
         Task<int> SaveChangesAsync();
 	}
 }

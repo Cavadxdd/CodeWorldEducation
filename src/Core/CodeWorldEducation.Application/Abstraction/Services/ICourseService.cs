@@ -15,5 +15,8 @@ namespace CodeWorldEducation.Application.Abstraction.Services
         Task<GetCourseListDto> CreateAsync(CreateCourseDto dto);
         Task<GetCourseListDto> UpdateAsync(UpdateCourseDto dto);
         Task DeleteAsync(int id);
+
+        Task<List<GetCourseListDto>> GetByCategoryAsync(int categoryId);
+        Task<GetCourseDetailDto> GetDetailBySlugAsync(string slug);
     }
 }

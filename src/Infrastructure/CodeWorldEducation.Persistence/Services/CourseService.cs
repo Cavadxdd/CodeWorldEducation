@@ -115,5 +115,33 @@ namespace CodeWorldEducation.Persistence.Services
             _unitOfWork.CourseRepository.Delete(course);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        public async Task<List<GetCourseListDto>> GetByCategoryAsync(int categoryId)
+        {
+            if (categoryId <= 0)
+                throw new ArgumentException("CategoryId must be greater than 0");
+
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId);
+            if (category == null)
+                throw new Exception($"Category with id {categoryId} not found");
+
+            var courses = await _unitOfWork.CourseRepository.GetByCategoryAsync(categoryId);
+
+            return _mapper.Map<List<GetCourseListDto>>(courses);
+        }
+
+        public async Task<GetCourseDetailDto> GetDetailBySlugAsync(string slug)
+        {
+            if (string.IsNullOrWhiteSpace(slug))
+                throw new ArgumentException("Slug cannot be empty");
+
+            var course = await _unitOfWork.CourseRepository
+                .GetBySlugAsync(slug);
+
+            if (course == null)
+                throw new Exception($"Course with slug '{slug}' not found");
+
+            return _mapper.Map<GetCourseDetailDto>(course);
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using CodeWorldEducation.Application.Common.Course;
+using CodeWorldEducation.Application.Features.Applications.Queries.GetCourseDetail;
+using CodeWorldEducation.Application.Features.Applications.Queries.GetCoursesByCategory;
 using CodeWorldEducation.Application.Features.Courses.Commands.Create;
 using CodeWorldEducation.Application.Features.Courses.Commands.Delete;
 using CodeWorldEducation.Application.Features.Courses.Commands.Update;
@@ -53,6 +55,22 @@ namespace CodeWorldEducation.API.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var response = await _mediator.Send(new DeleteCourseCommandRequest { Id = id });
+            return Ok(response);
+        }
+
+        [HttpGet("category/{categoryId}")]
+        public async Task<IActionResult> GetByCategory(int categoryId)
+        {
+            var response = await _mediator.Send(
+                new GetCoursesByCategoryQueryRequest { CategoryId = categoryId });
+            return Ok(response);
+        }
+
+        [HttpGet("detail/{slug}")]
+        public async Task<IActionResult> GetDetail(string slug)
+        {
+            var response = await _mediator.Send(
+                new GetCourseDetailQueryRequest { Slug = slug });
             return Ok(response);
         }
     }

@@ -46,8 +46,12 @@ using CodeWorldEducation.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DotNetEnv;
 
+Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -56,6 +60,18 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
+
+var jwtSecret = Environment.GetEnvironmentVariable(
+    builder.Configuration["Jwt:Secret"]!)
+    ?? throw new InvalidOperationException("JWT_SECRET environment variable not found.");
+
+var jwtIssuer = Environment.GetEnvironmentVariable(
+    builder.Configuration["Jwt:Issuer"]!)
+    ?? throw new InvalidOperationException("JWT_ISSUER environment variable not found.");
+
+var jwtAudience = Environment.GetEnvironmentVariable(
+    builder.Configuration["Jwt:Audience"]!)
+    ?? throw new InvalidOperationException("JWT_AUDIENCE environment variable not found.");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -70,10 +86,10 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
+            Encoding.UTF8.GetBytes(jwtSecret))
     };
 });
 

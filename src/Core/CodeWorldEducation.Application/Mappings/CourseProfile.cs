@@ -20,7 +20,10 @@ namespace CodeWorldEducation.Application.Mappings
 
             CreateMap<Course, GetCourseDetailDto>()
                 .ForMember(dest => dest.CategoryName,
-                    opt => opt.MapFrom(src => src.Category.Name));
+                    opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.Mentors,
+                    opt => opt.MapFrom(src =>
+                        src.MentorCourses.Select(mc => mc.Mentor).ToList()));
 
             CreateMap<CreateCourseDto, Course>();
             CreateMap<UpdateCourseDto, Course>();
