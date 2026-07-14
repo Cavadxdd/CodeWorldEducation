@@ -2,6 +2,8 @@
 using CodeWorldEducation.Application.Features.Roles.Commands.DeleteRole;
 using CodeWorldEducation.Application.Features.Roles.Commands.UpdateRole;
 using CodeWorldEducation.Application.Features.Roles.Queries.GetAllRoles;
+using CodeWorldEducation.Application.Features.Roles.Commands.AssignRole;
+using CodeWorldEducation.Application.Features.Roles.Queries.GetUserRoles;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,4 +47,17 @@ public class RolesController : ControllerBase
         var response = await _mediator.Send(new DeleteRoleCommandRequest { Id = id });
         return Ok(response);
     }
+	[HttpPost("assign-role")]
+	public async Task<IActionResult> AssignRole(AssignRoleCommandRequest request)
+	{
+		var response = await _mediator.Send(request);
+		return Ok(response);
+	}
+
+	[HttpGet("/api/users/{id}/roles")]
+	public async Task<IActionResult> GetUserRoles([FromRoute] string id)
+	{
+		var response = await _mediator.Send(new GetUserRolesQueryRequest { UserId = id });
+		return Ok(response);
+	}
 }

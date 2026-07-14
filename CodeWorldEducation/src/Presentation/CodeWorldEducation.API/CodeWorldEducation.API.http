@@ -1,0 +1,6 @@
+@CodeWorldEducation.API_HostAddress = http://localhost:5150
+
+GET {{CodeWorldEducation.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
