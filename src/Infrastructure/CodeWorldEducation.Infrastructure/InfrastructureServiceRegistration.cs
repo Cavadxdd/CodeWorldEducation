@@ -11,6 +11,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<ITokenService, TokenService>();
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IWhatsAppService, WhatsAppService>();
+        services.AddScoped<IEmailService, EmailService>();
 
 		return services;
     }
