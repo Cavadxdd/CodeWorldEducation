@@ -15,15 +15,22 @@ namespace CodeWorldEducation.Persistence.UnitOfWorks
 	{
 		private readonly AppDbContext _context;
         public IGenericRepository<Category> CategoryRepository { get; private set; }
-        public IGenericRepository<Course> CourseRepository { get; private set; }
+        public ICourseRepository CourseRepository { get; private set; }
         public IGenericRepository<Domain.Entities.Application> ApplicationRepository { get; private set; }
+        public IMentorRepository MentorRepository { get; private set; }
+        public IGenericRepository<MentorCourse> MentorCourseRepository { get; private set; }
+		public IAlumniRepository AlumniRepository { get; private set; }
+
 
         public UnitOfWork(AppDbContext context)
 		{
 			_context = context;
             CategoryRepository = new GenericRepository<Category>(_context);
-            CourseRepository = new GenericRepository<Course>(_context);
+            CourseRepository = new CourseRepository(_context);
             ApplicationRepository = new GenericRepository<Domain.Entities.Application>(_context);
+            MentorRepository = new MentorRepository(_context);
+            MentorCourseRepository = new GenericRepository<MentorCourse>(_context);
+			AlumniRepository = new AlumniRepository(_context);
         }
 
 		public async Task<int> SaveChangesAsync()

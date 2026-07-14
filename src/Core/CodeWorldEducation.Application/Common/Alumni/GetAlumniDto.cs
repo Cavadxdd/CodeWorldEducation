@@ -16,10 +16,6 @@ namespace CodeWorldEducation.Application.Common.Alumni
         public string CompletedCourse { get; set; }
         public string? CurrentCompany { get; set; }
         public string? CurrentPosition { get; set; }
-        public string? GitHubUrl { get; set; }
-        public string? BehanceUrl { get; set; }
-        public string? ProjectUrl { get; set; }
         public string? Testimonial { get; set; }
-        public DateTime? GraduatedAt { get; set; }
     }
 }

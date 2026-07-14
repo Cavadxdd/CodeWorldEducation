@@ -26,7 +26,14 @@ namespace CodeWorldEducation.Persistence.Repositories
 			return asNoTracking ? await _dbSet.AsNoTracking().ToListAsync() : await _dbSet.ToListAsync();
 		}
 
-		public async Task<T?> GetByIdAsync(int id)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate, bool asNoTracking = true)
+        {
+            IQueryable<T> query = _dbSet;
+            if (asNoTracking) query = query.AsNoTracking();
+            return await query.Where(predicate).ToListAsync();
+        }
+
+        public async Task<T?> GetByIdAsync(int id)
 		{
 			return await _dbSet.FindAsync(id);
 		}

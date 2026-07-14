@@ -18,8 +18,14 @@ public static class PersistenceServiceRegistration
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        var connectionStringName = configuration.GetConnectionString("DefaultConnection");
+
+        var connectionString = Environment.GetEnvironmentVariable(connectionStringName!)
+                               ?? throw new InvalidOperationException(
+                                   $"Environment variable '{connectionStringName}' was not found.");
+
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("Default")));
+            options.UseSqlServer(connectionString));
 
         services.AddIdentity<AppUser, AppRole>(options =>
         {
@@ -37,9 +43,15 @@ public static class PersistenceServiceRegistration
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.AddScoped<ICourseRepository, CourseRepository>();
+        services.AddScoped<IMentorRepository, MentorRepository>();
+        services.AddScoped<IAlumniRepository, AlumniRepository>();
+
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<IApplicationService, ApplicationService>();
+        services.AddScoped<IMentorService, MentorService>();
+        services.AddScoped<IAlumniService, AlumniService>();
 
         return services;
     }

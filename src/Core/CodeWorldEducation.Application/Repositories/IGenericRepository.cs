@@ -10,7 +10,8 @@ namespace CodeWorldEducation.Application.Repositories
 	public interface IGenericRepository<T> where T : class
 	{
 		Task<List<T>> GetAllAsync(bool asNoTracking = true);
-		Task<T?> GetByIdAsync(int id);
+        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate, bool asNoTracking = true);
+        Task<T?> GetByIdAsync(int id);
 		Task<T?> GetAsync(Expression<Func<T, bool>> predicate, bool asNoTracking = true);
 		Task AddAsync(T entity);
 		void Update(T entity);

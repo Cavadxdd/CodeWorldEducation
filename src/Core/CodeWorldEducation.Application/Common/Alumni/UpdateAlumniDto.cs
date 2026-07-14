@@ -9,7 +9,7 @@ namespace CodeWorldEducation.Application.Common.Alumni
 {
     public class UpdateAlumniDto
     {
-        public int Id { get; set; }
+       
         public string FullName { get; set; }
         public string? PhotoUrl { get; set; }
         public AlumniType AlumniType { get; set; }

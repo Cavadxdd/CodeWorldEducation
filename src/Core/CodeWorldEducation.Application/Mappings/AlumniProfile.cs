@@ -14,6 +14,7 @@ namespace CodeWorldEducation.Application.Mappings
         public AlumniProfile()
         {
             CreateMap<Alumni, GetAlumniDto>();
+            CreateMap<Alumni, GetAlumniDetailDto>();
             CreateMap<CreateAlumniDto, Alumni>();
             CreateMap<UpdateAlumniDto, Alumni>();
         }

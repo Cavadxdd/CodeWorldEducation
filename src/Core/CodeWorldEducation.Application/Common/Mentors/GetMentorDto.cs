@@ -14,6 +14,6 @@ namespace CodeWorldEducation.Application.Common.Mentor
         public string PhotoUrl { get; set; }
         public string? LinkedInUrl { get; set; }
         public List<string> Technologies { get; set; } 
-        public string? Bio { get; set; }
+        //public string? Bio { get; set; }
     }
 }

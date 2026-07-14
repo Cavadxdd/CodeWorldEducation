@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Application.Mappings
 {
-    
     public class MentorProfile : Profile
     {
         public MentorProfile()
@@ -19,14 +18,23 @@ namespace CodeWorldEducation.Application.Mappings
             CreateMap<Mentor, GetMentorDto>()
                 .ForMember(dest => dest.Technologies,
                     opt => opt.MapFrom(src =>
-                    JsonSerializer.Deserialize<List<string>>(src.Technologies,
-                    new JsonSerializerOptions())));
+                        JsonSerializer.Deserialize<List<string>>(src.Technologies,
+                            new JsonSerializerOptions())));
+
+            CreateMap<Mentor, GetMentorDetailDto>()
+                .ForMember(dest => dest.Technologies,
+                    opt => opt.MapFrom(src =>
+                        JsonSerializer.Deserialize<List<string>>(src.Technologies,
+                            new JsonSerializerOptions())))
+                .ForMember(dest => dest.Courses,
+                    opt => opt.MapFrom(src =>
+                        src.MentorCourses.Select(mc => mc.Course).ToList()));
 
             CreateMap<CreateMentorDto, Mentor>()
                 .ForMember(dest => dest.Technologies,
                     opt => opt.MapFrom(src =>
-                    JsonSerializer.Serialize(src.Technologies,
-                    new JsonSerializerOptions())));
+                        JsonSerializer.Serialize(src.Technologies,
+                            new JsonSerializerOptions())));
 
             CreateMap<UpdateMentorDto, Mentor>()
                 .ForMember(dest => dest.Technologies,

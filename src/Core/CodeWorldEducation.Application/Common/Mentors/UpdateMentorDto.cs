@@ -8,7 +8,7 @@ namespace CodeWorldEducation.Application.Common.Mentor
 {
     public class UpdateMentorDto
     {
-        public int Id { get; set; }
+      
         public string FullName { get; set; }
         public string Position { get; set; }
         public string PhotoUrl { get; set; }

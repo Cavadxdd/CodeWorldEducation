@@ -25,7 +25,7 @@ namespace CodeWorldEducation.Persistence.Services
 
         public async Task<List<GetCourseListDto>> GetAllAsync()
         {
-            var courses = await _unitOfWork.CourseRepository.GetAllAsync();
+            var courses = await _unitOfWork.CourseRepository.GetAllWithCategoryAsync();
             return _mapper.Map<List<GetCourseListDto>>(courses);
         }
 
@@ -34,9 +34,10 @@ namespace CodeWorldEducation.Persistence.Services
             if (id <= 0)
                 throw new ArgumentException("Id must be greater than 0");
 
-            var course = await _unitOfWork.CourseRepository.GetByIdAsync(id);
+            var course = await _unitOfWork.CourseRepository.GetDetailWithMentorsAsync(id);
+
             if (course == null)
-                throw new Exception($"Course with id {id} not found");
+                throw new KeyNotFoundException($"Course with id {id} not found");
 
             return _mapper.Map<GetCourseDetailDto>(course);
         }
@@ -52,12 +53,12 @@ namespace CodeWorldEducation.Persistence.Services
             var slugExists = await _unitOfWork.CourseRepository
                 .GetAsync(c => c.Slug == dto.Slug);
             if (slugExists != null)
-                throw new Exception($"Course with slug '{dto.Slug}' already exists");
+                throw new InvalidOperationException($"Course with slug '{dto.Slug}' already exists");
 
             var categoryExists = await _unitOfWork.CategoryRepository
                 .GetByIdAsync(dto.CategoryId);
             if (categoryExists == null)
-                throw new Exception($"Category with id {dto.CategoryId} not found");
+                throw new KeyNotFoundException($"Category with id {dto.CategoryId} not found");
 
             var course = _mapper.Map<Course>(dto);
             course.CreatedAt = DateTime.UtcNow;
@@ -69,10 +70,12 @@ namespace CodeWorldEducation.Persistence.Services
             return _mapper.Map<GetCourseListDto>(course);
         }
 
-        public async Task<GetCourseListDto> UpdateAsync(UpdateCourseDto dto)
+        public async Task<GetCourseListDto> UpdateAsync(int id, UpdateCourseDto dto)
         {
-            if (dto.Id <= 0)
+            if (id <= 0)
                 throw new ArgumentException("Id must be greater than 0");
+
+            
 
             if (string.IsNullOrWhiteSpace(dto.Name))
                 throw new ArgumentException("Course name cannot be empty");
@@ -80,19 +83,19 @@ namespace CodeWorldEducation.Persistence.Services
             if (string.IsNullOrWhiteSpace(dto.Slug))
                 throw new ArgumentException("Course slug cannot be empty");
 
-            var course = await _unitOfWork.CourseRepository.GetByIdAsync(dto.Id);
+            var course = await _unitOfWork.CourseRepository.GetByIdAsync(id);
             if (course == null)
-                throw new Exception($"Course with id {dto.Id} not found");
+                throw new KeyNotFoundException($"Course with id {id} not found");
 
             var slugExists = await _unitOfWork.CourseRepository
-                .GetAsync(c => c.Slug == dto.Slug && c.Id != dto.Id);
+                .GetAsync(c => c.Slug == dto.Slug && c.Id != id);
             if (slugExists != null)
-                throw new Exception($"Course with slug '{dto.Slug}' already exists");
+                throw new InvalidOperationException($"Course with slug '{dto.Slug}' already exists");
 
             var categoryExists = await _unitOfWork.CategoryRepository
                 .GetByIdAsync(dto.CategoryId);
             if (categoryExists == null)
-                throw new Exception($"Category with id {dto.CategoryId} not found");
+                throw new KeyNotFoundException($"Category with id {dto.CategoryId} not found");
 
             _mapper.Map(dto, course);
             course.UpdatedAt = DateTime.UtcNow;
@@ -100,7 +103,9 @@ namespace CodeWorldEducation.Persistence.Services
             _unitOfWork.CourseRepository.Update(course);
             await _unitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<GetCourseListDto>(course);
+            var updatedCourse = await _unitOfWork.CourseRepository.GetWithCategoryByIdAsync(id);
+
+            return _mapper.Map<GetCourseListDto>(updatedCourse);
         }
 
         public async Task DeleteAsync(int id)
@@ -110,10 +115,38 @@ namespace CodeWorldEducation.Persistence.Services
 
             var course = await _unitOfWork.CourseRepository.GetByIdAsync(id);
             if (course == null)
-                throw new Exception($"Course with id {id} not found");
+                throw new KeyNotFoundException($"Course with id {id} not found");
 
             _unitOfWork.CourseRepository.Delete(course);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<List<GetCourseListDto>> GetByCategoryAsync(int categoryId)
+        {
+            if (categoryId <= 0)
+                throw new ArgumentException("CategoryId must be greater than 0");
+
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId);
+            if (category == null)
+                throw new KeyNotFoundException($"Category with id {categoryId} not found");
+
+            var courses = await _unitOfWork.CourseRepository.GetByCategoryAsync(categoryId);
+
+            return _mapper.Map<List<GetCourseListDto>>(courses);
+        }
+
+        public async Task<GetCourseDetailDto> GetDetailBySlugAsync(string slug)
+        {
+            if (string.IsNullOrWhiteSpace(slug))
+                throw new ArgumentException("Slug cannot be empty");
+
+            var course = await _unitOfWork.CourseRepository
+                .GetBySlugAsync(slug);
+
+            if (course == null)
+                throw new KeyNotFoundException($"Course with slug '{slug}' not found");
+
+            return _mapper.Map<GetCourseDetailDto>(course);
         }
     }
 }
