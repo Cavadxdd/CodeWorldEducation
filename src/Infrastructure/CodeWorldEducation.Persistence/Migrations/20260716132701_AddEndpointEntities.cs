@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CodeWorldEducation.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddEndpointPermission : Migration
+    public partial class AddEndpointEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,7 @@ namespace CodeWorldEducation.Persistence.Migrations
                 table: "Applications",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(2026, 7, 16, 12, 34, 29, 427, DateTimeKind.Utc).AddTicks(7213),
+                defaultValue: new DateTime(2026, 7, 16, 13, 27, 1, 615, DateTimeKind.Utc).AddTicks(4753),
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2",
                 oldDefaultValue: new DateTime(2026, 7, 4, 17, 12, 35, 955, DateTimeKind.Utc).AddTicks(2391));
@@ -111,7 +111,7 @@ namespace CodeWorldEducation.Persistence.Migrations
                 defaultValue: new DateTime(2026, 7, 4, 17, 12, 35, 955, DateTimeKind.Utc).AddTicks(2391),
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2",
-                oldDefaultValue: new DateTime(2026, 7, 16, 12, 34, 29, 427, DateTimeKind.Utc).AddTicks(7213));
+                oldDefaultValue: new DateTime(2026, 7, 16, 13, 27, 1, 615, DateTimeKind.Utc).AddTicks(4753));
         }
     }
 }

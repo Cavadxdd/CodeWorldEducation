@@ -277,7 +277,7 @@ namespace CodeWorldEducation.Persistence.Migrations
                     b.Property<DateTime>("SubmittedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2026, 7, 16, 12, 34, 29, 427, DateTimeKind.Utc).AddTicks(7213));
+                        .HasDefaultValue(new DateTime(2026, 7, 16, 13, 27, 1, 615, DateTimeKind.Utc).AddTicks(4753));
 
                     b.Property<int?>("TeachingMode")
                         .HasColumnType("int");

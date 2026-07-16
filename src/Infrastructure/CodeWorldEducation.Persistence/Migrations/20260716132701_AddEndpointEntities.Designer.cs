@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeWorldEducation.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260714135403_AddCourseFields")]
-    partial class AddCourseFields
+    [Migration("20260716132701_AddEndpointEntities")]
+    partial class AddEndpointEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -280,7 +280,7 @@ namespace CodeWorldEducation.Persistence.Migrations
                     b.Property<DateTime>("SubmittedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2026, 7, 14, 13, 54, 2, 990, DateTimeKind.Utc).AddTicks(5073));
+                        .HasDefaultValue(new DateTime(2026, 7, 16, 13, 27, 1, 615, DateTimeKind.Utc).AddTicks(4753));
 
                     b.Property<int?>("TeachingMode")
                         .HasColumnType("int");
@@ -418,6 +418,88 @@ namespace CodeWorldEducation.Persistence.Migrations
                     b.ToTable("Courses", (string)null);
                 });
 
+            modelBuilder.Entity("CodeWorldEducation.Domain.Entities.Endpoint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Definition")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("HttpMethod")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Menu")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Route")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Endpoints");
+                });
+
+            modelBuilder.Entity("CodeWorldEducation.Domain.Entities.EndpointRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EndpointId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndpointId");
+
+                    b.ToTable("EndpointRoles");
+                });
+
             modelBuilder.Entity("CodeWorldEducation.Domain.Entities.Mentor", b =>
                 {
                     b.Property<int>("Id")
@@ -494,7 +576,9 @@ namespace CodeWorldEducation.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -681,6 +765,17 @@ namespace CodeWorldEducation.Persistence.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("CodeWorldEducation.Domain.Entities.EndpointRole", b =>
+                {
+                    b.HasOne("CodeWorldEducation.Domain.Entities.Endpoint", "Endpoint")
+                        .WithMany("EndpointRoles")
+                        .HasForeignKey("EndpointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Endpoint");
+                });
+
             modelBuilder.Entity("CodeWorldEducation.Domain.Entities.MentorCourse", b =>
                 {
                     b.HasOne("CodeWorldEducation.Domain.Entities.Course", "Course")
@@ -776,6 +871,11 @@ namespace CodeWorldEducation.Persistence.Migrations
                     b.Navigation("MentorCourses");
 
                     b.Navigation("SyllabusItems");
+                });
+
+            modelBuilder.Entity("CodeWorldEducation.Domain.Entities.Endpoint", b =>
+                {
+                    b.Navigation("EndpointRoles");
                 });
 
             modelBuilder.Entity("CodeWorldEducation.Domain.Entities.Mentor", b =>
