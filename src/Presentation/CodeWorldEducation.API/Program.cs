@@ -90,45 +90,46 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(jwtSecret))
     };
 });
-// JWT Config
-var secret = builder.Configuration["Jwt:Secret"];
-var issuer = builder.Configuration["Jwt:Issuer"];
-var audience = builder.Configuration["Jwt:Audience"];
+/// BU ERROR VERIRDI CUNKI IKI DENE JWT REGISTRATION VAR IDI
+//// JWT Config
+//var secret = builder.Configuration["Jwt:Secret"];
+//var issuer = builder.Configuration["Jwt:Issuer"];
+//var audience = builder.Configuration["Jwt:Audience"];
 
-if (string.IsNullOrWhiteSpace(secret))
-    throw new Exception("Jwt:Secret tapılmadı.");
+//if (string.IsNullOrWhiteSpace(secret))
+//    throw new Exception("Jwt:Secret tapılmadı.");
 
-if (string.IsNullOrWhiteSpace(issuer))
-    throw new Exception("Jwt:Issuer tapılmadı.");
+//if (string.IsNullOrWhiteSpace(issuer))
+//    throw new Exception("Jwt:Issuer tapılmadı.");
 
-if (string.IsNullOrWhiteSpace(audience))
-    throw new Exception("Jwt:Audience tapılmadı.");
+//if (string.IsNullOrWhiteSpace(audience))
+//    throw new Exception("Jwt:Audience tapılmadı.");
 
-builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
+//builder.Services
+//    .AddAuthentication(options =>
+//    {
+//        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//    })
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
 
-            ValidIssuer = issuer,
-            ValidAudience = audience,
+//            ValidIssuer = issuer,
+//            ValidAudience = audience,
 
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(secret)),
+//            IssuerSigningKey = new SymmetricSecurityKey(
+//                Encoding.UTF8.GetBytes(secret)),
 
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+//            ClockSkew = TimeSpan.Zero
+//        };
+//    });
 
 builder.Services.AddAuthorization();
 
