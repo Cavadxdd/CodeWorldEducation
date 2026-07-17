@@ -1,0 +1,14 @@
+﻿using CodeWorldEducation.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CodeWorldEducation.Application.Repositories
+{
+    public interface IEndpointRepository : IGenericRepository<Endpoint>
+    {
+        Task<List<Endpoint>> GetAllWithRolesAsync();
+    }
+}

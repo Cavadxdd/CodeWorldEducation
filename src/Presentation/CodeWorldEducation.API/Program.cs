@@ -1,12 +1,15 @@
-﻿using CodeWorldEducation.Application;
+﻿using CodeWorldEducation.API.Middlewares;
+using CodeWorldEducation.Application;
+using CodeWorldEducation.Application.Abstraction.Services;
+using CodeWorldEducation.Application.Security;
 using CodeWorldEducation.Infrastructure;
 using CodeWorldEducation.Persistence;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using DotNetEnv;
-using CodeWorldEducation.API.Middlewares;
 
 Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -131,9 +134,25 @@ builder.Services.AddAuthentication(options =>
 //        };
 //    });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("EndpointPermission", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.AddRequirements(new EndpointPermissionRequirement());
+    });
+});
+
+builder.Services.AddScoped<IAuthorizationHandler, EndpointPermissionHandler>();
 
 var app = builder.Build();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var endpointService = scope.ServiceProvider.GetRequiredService<IEndpointService>();
+
+    await endpointService.RegisterEndpointsAsync(typeof(Program).Assembly);
+}
 
 // Middleware
 if (app.Environment.IsDevelopment())

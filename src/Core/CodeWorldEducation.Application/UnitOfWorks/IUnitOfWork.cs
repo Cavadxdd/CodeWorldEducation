@@ -16,6 +16,8 @@ namespace CodeWorldEducation.Application.UnitOfWorks
         IMentorRepository MentorRepository { get; }
         IGenericRepository<MentorCourse> MentorCourseRepository { get; }
         IAlumniRepository AlumniRepository { get; }
+        IEndpointRepository EndpointRepository { get; }
+        IGenericRepository<EndpointRole> EndpointRoleRepository { get; }
         Task<int> SaveChangesAsync();
 	}
 }

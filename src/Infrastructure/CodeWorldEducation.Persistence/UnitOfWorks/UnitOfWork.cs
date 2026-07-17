@@ -20,6 +20,10 @@ namespace CodeWorldEducation.Persistence.UnitOfWorks
         public IMentorRepository MentorRepository { get; private set; }
         public IGenericRepository<MentorCourse> MentorCourseRepository { get; private set; }
 		public IAlumniRepository AlumniRepository { get; private set; }
+        public IEndpointRepository EndpointRepository { get; private set; }
+
+        public IGenericRepository<EndpointRole> EndpointRoleRepository { get; private set; }
+
 
 
         public UnitOfWork(AppDbContext context)
@@ -31,6 +35,8 @@ namespace CodeWorldEducation.Persistence.UnitOfWorks
             MentorRepository = new MentorRepository(_context);
             MentorCourseRepository = new GenericRepository<MentorCourse>(_context);
 			AlumniRepository = new AlumniRepository(_context);
+            EndpointRepository = new EndpointRepository(_context);
+            EndpointRoleRepository = new GenericRepository<EndpointRole>(_context);
         }
 
 		public async Task<int> SaveChangesAsync()

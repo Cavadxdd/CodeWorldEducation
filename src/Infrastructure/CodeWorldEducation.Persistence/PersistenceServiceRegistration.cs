@@ -52,6 +52,8 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IMentorService, MentorService>();
         services.AddScoped<IAlumniService, AlumniService>();
+        services.AddScoped<IEndpointService, EndpointService>();
+        services.AddScoped<IAuthorizationEndpointService, AuthorizationEndpointService>();
 
         return services;
     }
