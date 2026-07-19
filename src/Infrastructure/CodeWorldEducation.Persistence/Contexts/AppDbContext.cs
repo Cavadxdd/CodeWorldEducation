@@ -16,6 +16,8 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     public DbSet<MentorCourse> MentorCourses { get; set; }
     public DbSet<Alumni> Alumni { get; set; }
     public DbSet<Domain.Entities.Application> Applications { get; set; }
+    public DbSet<Endpoint> Endpoints => Set<Endpoint>();
+    public DbSet<EndpointRole> EndpointRoles => Set<EndpointRole>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

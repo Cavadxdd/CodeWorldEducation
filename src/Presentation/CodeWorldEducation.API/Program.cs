@@ -1,12 +1,15 @@
-﻿using CodeWorldEducation.Application;
+﻿using CodeWorldEducation.API.Middlewares;
+using CodeWorldEducation.Application;
+using CodeWorldEducation.Application.Abstraction.Services;
+using CodeWorldEducation.Application.Security;
 using CodeWorldEducation.Infrastructure;
 using CodeWorldEducation.Persistence;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using DotNetEnv;
-using CodeWorldEducation.API.Middlewares;
 
 Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -90,49 +93,67 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(jwtSecret))
     };
 });
-// JWT Config
-var secret = builder.Configuration["Jwt:Secret"];
-var issuer = builder.Configuration["Jwt:Issuer"];
-var audience = builder.Configuration["Jwt:Audience"];
+// NOT: Bu bloklar əvvəllər ikinci bir JWT qeydiyyatı yaradırdı və
+// "Scheme already exists: Bearer" xətasına səbəb olurdu, ona görə deaktiv edilib.
+//// JWT Config
+//var secret = builder.Configuration["Jwt:Secret"];
+//var issuer = builder.Configuration["Jwt:Issuer"];
+//var audience = builder.Configuration["Jwt:Audience"];
 
-if (string.IsNullOrWhiteSpace(secret))
-    throw new Exception("Jwt:Secret tapılmadı.");
+//if (string.IsNullOrWhiteSpace(secret))
+//    throw new Exception("Jwt:Secret tapılmadı.");
 
-if (string.IsNullOrWhiteSpace(issuer))
-    throw new Exception("Jwt:Issuer tapılmadı.");
+//if (string.IsNullOrWhiteSpace(issuer))
+//    throw new Exception("Jwt:Issuer tapılmadı.");
 
-if (string.IsNullOrWhiteSpace(audience))
-    throw new Exception("Jwt:Audience tapılmadı.");
+//if (string.IsNullOrWhiteSpace(audience))
+//    throw new Exception("Jwt:Audience tapılmadı.");
 
-builder.Services
-    .AddAuthentication(options =>
+//builder.Services
+//    .AddAuthentication(options =>
+//    {
+//        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//    })
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+
+//            ValidIssuer = issuer,
+//            ValidAudience = audience,
+
+//            IssuerSigningKey = new SymmetricSecurityKey(
+//                Encoding.UTF8.GetBytes(secret)),
+
+//            ClockSkew = TimeSpan.Zero
+//        };
+//    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("EndpointPermission", policy =>
     {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-
-            ValidIssuer = issuer,
-            ValidAudience = audience,
-
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(secret)),
-
-            ClockSkew = TimeSpan.Zero
-        };
+        policy.RequireAuthenticatedUser();
+        policy.AddRequirements(new EndpointPermissionRequirement());
     });
+});
 
-builder.Services.AddAuthorization();
+builder.Services.AddScoped<IAuthorizationHandler, EndpointPermissionHandler>();
 
 var app = builder.Build();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var endpointService = scope.ServiceProvider.GetRequiredService<IEndpointService>();
+
+    await endpointService.RegisterEndpointsAsync(typeof(Program).Assembly);
+}
 
 // Middleware
 if (app.Environment.IsDevelopment())
