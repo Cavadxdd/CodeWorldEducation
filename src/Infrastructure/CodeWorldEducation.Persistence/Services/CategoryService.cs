@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using CodeWorldEducation.Application.Abstraction.Services;
 using CodeWorldEducation.Application.Common.Categories;
 using CodeWorldEducation.Application.Common.Category;
@@ -112,3 +112,5 @@ namespace CodeWorldEducation.Persistence.Implementations
         }
     }
 }
+
+
