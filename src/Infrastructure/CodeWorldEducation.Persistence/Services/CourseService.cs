@@ -4,6 +4,7 @@ using CodeWorldEducation.Application.Common.Course;
 using CodeWorldEducation.Application.Common.Courses;
 using CodeWorldEducation.Application.UnitOfWorks;
 using CodeWorldEducation.Domain.Entities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +17,22 @@ namespace CodeWorldEducation.Persistence.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<CourseService> _logger;
 
-        public CourseService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CourseService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CourseService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<List<GetCourseListDto>> GetAllAsync()
         {
             var courses = await _unitOfWork.CourseRepository.GetAllWithCategoryAsync();
+
+            _logger.LogInformation(
+                "All courses retrieved. Count: {Count}",
+                courses.Count);
             return _mapper.Map<List<GetCourseListDto>>(courses);
         }
 
@@ -38,6 +45,11 @@ namespace CodeWorldEducation.Persistence.Services
 
             if (course == null)
                 throw new KeyNotFoundException($"Course with id {id} not found");
+
+            _logger.LogInformation(
+                "Course retrieved. Id: {Id} | Name: {Name}",
+                course.Id,
+                course.Name);
 
             return _mapper.Map<GetCourseDetailDto>(course);
         }
@@ -66,6 +78,12 @@ namespace CodeWorldEducation.Persistence.Services
 
             await _unitOfWork.CourseRepository.AddAsync(course);
             await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Course created. Id: {Id} | Name: {Name} | CreatedAt: {CreatedAt}",
+                course.Id,
+                course.Name,
+                course.CreatedAt);
 
             return _mapper.Map<GetCourseListDto>(course);
         }
@@ -105,6 +123,12 @@ namespace CodeWorldEducation.Persistence.Services
 
             var updatedCourse = await _unitOfWork.CourseRepository.GetWithCategoryByIdAsync(id);
 
+            _logger.LogInformation(
+                "Course updated. Id: {Id} | Name: {Name} | UpdatedAt: {UpdatedAt}",
+                course.Id,
+                course.Name,
+                course.UpdatedAt);
+
             return _mapper.Map<GetCourseListDto>(updatedCourse);
         }
 
@@ -119,6 +143,12 @@ namespace CodeWorldEducation.Persistence.Services
 
             _unitOfWork.CourseRepository.Delete(course);
             await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogWarning(
+                "Course deleted. Id: {Id} | Name: {Name} | DeletedAt: {DeletedAt}",
+                course.Id,
+                course.Name,
+                DateTime.UtcNow);
         }
 
         public async Task<List<GetCourseListDto>> GetByCategoryAsync(int categoryId)
@@ -131,6 +161,13 @@ namespace CodeWorldEducation.Persistence.Services
                 throw new KeyNotFoundException($"Category with id {categoryId} not found");
 
             var courses = await _unitOfWork.CourseRepository.GetByCategoryAsync(categoryId);
+
+            _logger.LogInformation(
+                "Courses retrieved by category. CategoryId: {CategoryId} | CategoryName: {CategoryName} | Count: {Count} | Time: {Time}",
+                categoryId,
+                category.Name,
+                courses.Count,
+                DateTime.UtcNow);
 
             return _mapper.Map<List<GetCourseListDto>>(courses);
         }
@@ -145,6 +182,13 @@ namespace CodeWorldEducation.Persistence.Services
 
             if (course == null)
                 throw new KeyNotFoundException($"Course with slug '{slug}' not found");
+
+            _logger.LogInformation(
+                "Course detail retrieved by slug. Slug: {Slug} | Id: {Id} | Name: {Name} | Time: {Time}",
+                slug,
+                course.Id,
+                course.Name,
+                DateTime.UtcNow);
 
             return _mapper.Map<GetCourseDetailDto>(course);
         }

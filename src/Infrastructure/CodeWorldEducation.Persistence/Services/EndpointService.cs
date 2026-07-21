@@ -4,6 +4,7 @@ using CodeWorldEducation.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace CodeWorldEducation.Persistence.Services
     public class EndpointService : IEndpointService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<EndpointService> _logger;
 
-        public EndpointService(IUnitOfWork unitOfWork)
+        public EndpointService(IUnitOfWork unitOfWork, ILogger<EndpointService> logger)
         {
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task RegisterEndpointsAsync(Assembly assembly)
@@ -29,6 +32,8 @@ namespace CodeWorldEducation.Persistence.Services
                     typeof(ControllerBase).IsAssignableFrom(x) &&
                     !x.IsAbstract)
                 .ToList();
+
+            int registeredCount = 0;
 
             foreach (var controller in controllers)
             {
@@ -86,10 +91,24 @@ namespace CodeWorldEducation.Persistence.Services
                     };
 
                     await _unitOfWork.EndpointRepository.AddAsync(endpoint);
+                    registeredCount++;
+
+                    _logger.LogInformation(
+                        "Endpoint registered. Code: {Code} | HttpMethod: {HttpMethod} | " +
+                        "Route: {Route} | Time: {Time}",
+                        code,
+                        httpMethod,
+                        route,
+                        DateTime.UtcNow);
                 }
             }
 
             await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation(
+            "Endpoint registration completed. Total registered: {Count} | Time: {Time}",
+            registeredCount,
+            DateTime.UtcNow);
         }
     }
 }

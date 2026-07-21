@@ -5,6 +5,7 @@ using CodeWorldEducation.Application.Common.Applications;
 using CodeWorldEducation.Application.Helpers;
 using CodeWorldEducation.Application.UnitOfWorks;
 using CodeWorldEducation.Domain.Enums;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +18,21 @@ namespace CodeWorldEducation.Persistence.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<ApplicationService> _logger;
 
-        public ApplicationService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ApplicationService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ApplicationService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<List<GetApplicationDto>> GetAllAsync()
         {
             var applications = await _unitOfWork.ApplicationRepository.GetAllAsync();
+            _logger.LogInformation(
+          "All applications retrieved. Count: {Count}",
+          applications.Count);
             return _mapper.Map<List<GetApplicationDto>>(applications);
         }
 
@@ -38,6 +44,11 @@ namespace CodeWorldEducation.Persistence.Services
             var application = await _unitOfWork.ApplicationRepository.GetByIdAsync(id);
             if (application == null)
                 throw new Exception($"Application with id {id} not found");
+
+            _logger.LogInformation(
+           "Application retrieved. Id: {Id} | ApplicantType: {ApplicantType}",
+           application.Id,
+           application.ApplicantType);
 
             return _mapper.Map<GetApplicationDto>(application);
         }
@@ -79,6 +90,14 @@ namespace CodeWorldEducation.Persistence.Services
             await _unitOfWork.ApplicationRepository.AddAsync(application);
             await _unitOfWork.SaveChangesAsync();
 
+            _logger.LogInformation(
+            "Application created. Id: {Id} | ApplicantType: {ApplicantType} | " +
+            "FullName: {FullName} | SubmittedAt: {SubmittedAt}",
+            application.Id,
+            application.ApplicantType,
+            $"{application.FirstName} {application.LastName}",
+            application.SubmittedAt);
+
             return _mapper.Map<GetApplicationDto>(application);
         }
 
@@ -97,6 +116,13 @@ namespace CodeWorldEducation.Persistence.Services
             _unitOfWork.ApplicationRepository.Update(application);
             await _unitOfWork.SaveChangesAsync();
 
+            _logger.LogInformation(
+            "Application status updated. Id: {Id} |  " +
+            "NewStatus: {NewStatus} | UpdatedAt: {UpdatedAt}",
+            application.Id,
+            application.Status,
+            application.UpdatedAt);
+
             return _mapper.Map<GetApplicationDto>(application);
         }
 
@@ -111,6 +137,14 @@ namespace CodeWorldEducation.Persistence.Services
 
             _unitOfWork.ApplicationRepository.Delete(application);
             await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogWarning(
+            "Application deleted. Id: {Id} | FullName: {FullName} | " +
+            "ApplicantType: {ApplicantType} | DeletedAt: {DeletedAt}",
+            application.Id,
+            $"{application.FirstName} {application.LastName}",
+            application.ApplicantType,
+            DateTime.UtcNow);
         }
 
     }

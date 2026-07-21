@@ -10,11 +10,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Serilog;
 
 Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
+
+Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
+builder.Host.UseSerilog();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -163,6 +167,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
@@ -170,4 +175,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+try
+{
+    Log.Information("CodeWorld API starting up");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "CodeWorld API failed to start");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
