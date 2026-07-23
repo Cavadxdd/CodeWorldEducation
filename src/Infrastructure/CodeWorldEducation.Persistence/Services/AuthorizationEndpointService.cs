@@ -2,6 +2,7 @@
 using CodeWorldEducation.Application.Features.Endpoints.Queries.GetAllEndpoints;
 using CodeWorldEducation.Application.UnitOfWorks;
 using CodeWorldEducation.Domain.Entities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +14,22 @@ namespace CodeWorldEducation.Persistence.Services
     public class AuthorizationEndpointService : IAuthorizationEndpointService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<AuthorizationEndpointService> _logger;
 
-        public AuthorizationEndpointService(IUnitOfWork unitOfWork)
+        public AuthorizationEndpointService(IUnitOfWork unitOfWork, ILogger<AuthorizationEndpointService> logger)
         {
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<List<GetAllAuthorizationEndpointsQueryResponse>> GetAllAsync()
         {
             var endpoints = await _unitOfWork.EndpointRepository.GetAllWithRolesAsync();
+
+            _logger.LogInformation(
+           "All authorization endpoints retrieved. Count: {Count} | Time: {Time}",
+           endpoints.Count,
+           DateTime.UtcNow);
 
             return endpoints.Select(x => new GetAllAuthorizationEndpointsQueryResponse
             {
@@ -65,6 +73,13 @@ namespace CodeWorldEducation.Persistence.Services
             }
 
             await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation(
+           "Endpoint roles assigned. Code: {Code} | " +
+           "NewRoles: {NewRoles} | Time: {Time}",
+           endpointCode,
+           string.Join(", ", roles),
+           DateTime.UtcNow);
         }
     }
 }

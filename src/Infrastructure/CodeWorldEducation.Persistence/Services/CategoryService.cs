@@ -4,6 +4,7 @@ using CodeWorldEducation.Application.Common.Categories;
 using CodeWorldEducation.Application.Common.Category;
 using CodeWorldEducation.Application.UnitOfWorks;
 using CodeWorldEducation.Domain.Entities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +17,23 @@ namespace CodeWorldEducation.Persistence.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<CategoryService> _logger;
 
-        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CategoryService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<List<GetCategoryDto>> GetAllAsync()
         {
             var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
+
+            _logger.LogInformation(
+                "Categories retrieved. Count: {Count} ",
+                categories.Count);
+
             return _mapper.Map<List<GetCategoryDto>>(categories);
         }
 
@@ -37,6 +45,10 @@ namespace CodeWorldEducation.Persistence.Implementations
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
             if (category == null)
                 throw new Exception($"Category with id {id} not found");
+
+            _logger.LogInformation(
+                "Category retrieved. Id: {Id} | Name: {Name}",
+                category.Id, category.Name);
 
             return _mapper.Map<GetCategoryDto>(category);
         }
@@ -60,6 +72,12 @@ namespace CodeWorldEducation.Persistence.Implementations
 
             await _unitOfWork.CategoryRepository.AddAsync(category);
             await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Category created. Id: {Id} | Name: {Name} | CreatedAt: {CreatedAt}",
+                category.Id,
+                category.Name,
+                category.CreatedAt);
 
             return _mapper.Map<GetCategoryDto>(category);
         }
@@ -90,6 +108,12 @@ namespace CodeWorldEducation.Persistence.Implementations
             _unitOfWork.CategoryRepository.Update(category);
             await _unitOfWork.SaveChangesAsync();
 
+            _logger.LogInformation(
+                "Category updated. Id: {Id} | Name: {Name} | UpdatedAt: {UpdatedAt}",
+                category.Id,
+                category.Name,
+                category.UpdatedAt);
+
             return _mapper.Map<GetCategoryDto>(category);
         }
 
@@ -109,6 +133,12 @@ namespace CodeWorldEducation.Persistence.Implementations
 
             _unitOfWork.CategoryRepository.Delete(category);
             await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogWarning(
+                "Category deleted. Id: {Id} | Name: {Name} | DeletedAt: {DeletedAt}",
+                category.Id,
+                category.Name,
+                DateTime.UtcNow);
         }
     }
 }
