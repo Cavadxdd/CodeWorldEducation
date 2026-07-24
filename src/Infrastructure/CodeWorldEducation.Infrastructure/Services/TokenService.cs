@@ -30,17 +30,28 @@ public class TokenService : ITokenService
         foreach (var role in roles)
             claims.Add(new Claim(ClaimTypes.Role, role));
 
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]!));
+        Console.WriteLine($"Config Secret: {_configuration["Jwt:Secret"]}");
+        Console.WriteLine($"Env Secret: {Environment.GetEnvironmentVariable("JWT_SECRET")}");
+
+        var secret = Environment.GetEnvironmentVariable(_configuration["Jwt:Secret"]!)
+        ?? throw new InvalidOperationException("JWT secret not found.");
+
+        var issuer = Environment.GetEnvironmentVariable(_configuration["Jwt:Issuer"]!)
+            ?? throw new InvalidOperationException("JWT issuer not found.");
+
+        var audience = Environment.GetEnvironmentVariable(_configuration["Jwt:Audience"]!)
+            ?? throw new InvalidOperationException("JWT audience not found.");
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddDays(1),
-            signingCredentials: credentials);
+            issuer: issuer,
+        audience: audience,
+        claims: claims,
+        expires: DateTime.UtcNow.AddDays(1),
+        signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
