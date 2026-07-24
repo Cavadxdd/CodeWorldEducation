@@ -37,6 +37,9 @@ namespace CodeWorldEducation.Persistence.Services
 
             foreach (var controller in controllers)
             {
+                //DEBUG
+                //Console.WriteLine(controller.Name);
+
                 var actions = controller.GetMethods(BindingFlags.Instance | BindingFlags.Public)
                     .Where(x => x.IsPublic &&
                                 !x.IsDefined(typeof(NonActionAttribute)))
@@ -44,12 +47,14 @@ namespace CodeWorldEducation.Persistence.Services
 
                 foreach (var action in actions)
                 {
-                    var authorizeAttribute =
-                    action.GetCustomAttribute<AuthorizeAttribute>() ??
-                    controller.GetCustomAttribute<AuthorizeAttribute>();
 
-                    if (authorizeAttribute == null)
-                        continue;
+                    // EGER YALNIZ QORUNAN ENDPOINTLER REGISTER OLUNACAQSA KOMENTDEN SIL
+                    //var authorizeAttribute =
+                    //action.GetCustomAttribute<AuthorizeAttribute>() ??
+                    //controller.GetCustomAttribute<AuthorizeAttribute>();
+
+                    //if (authorizeAttribute == null)
+                    //    continue;
 
                     var controllerName = controller.Name.Replace("Controller", "");
 

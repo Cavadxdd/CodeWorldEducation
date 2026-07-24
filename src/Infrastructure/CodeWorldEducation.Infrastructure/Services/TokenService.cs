@@ -30,8 +30,9 @@ public class TokenService : ITokenService
         foreach (var role in roles)
             claims.Add(new Claim(ClaimTypes.Role, role));
 
-        Console.WriteLine($"Config Secret: {_configuration["Jwt:Secret"]}");
-        Console.WriteLine($"Env Secret: {Environment.GetEnvironmentVariable("JWT_SECRET")}");
+        //DEBUG
+        //Console.WriteLine($"Config Secret: {_configuration["Jwt:Secret"]}");
+        //Console.WriteLine($"Env Secret: {Environment.GetEnvironmentVariable("JWT_SECRET")}");
 
         var secret = Environment.GetEnvironmentVariable(_configuration["Jwt:Secret"]!)
         ?? throw new InvalidOperationException("JWT secret not found.");
