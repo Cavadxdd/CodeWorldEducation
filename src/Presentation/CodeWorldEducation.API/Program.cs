@@ -150,6 +150,9 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IAuthorizationHandler, EndpointPermissionHandler>();
 
+Console.WriteLine(builder.Configuration["GoogleMailSettings:ClientId"]);
+Console.WriteLine(builder.Configuration["GoogleMailSettings:FromEmail"]);
+
 var app = builder.Build();
 
 await using (var scope = app.Services.CreateAsyncScope())

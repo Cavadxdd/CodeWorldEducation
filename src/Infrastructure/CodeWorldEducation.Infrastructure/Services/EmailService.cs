@@ -22,10 +22,26 @@ public class EmailService : IEmailService
 
     public async Task SendEmailAsync(string toEmail, string subject, string body)
     {
-        var clientId = _configuration["App:Gmail:ClientId"]!;
-        var clientSecret = _configuration["App:Gmail:ClientSecret"]!;
-        var refreshToken = _configuration["App:Gmail:RefreshToken"]!;
-        var senderEmail = _configuration["App:Gmail:SenderEmail"]!;
+
+        var clientId = Environment.GetEnvironmentVariable(
+    _configuration["GoogleMailSettings:ClientId"]!);
+
+        var clientSecret = Environment.GetEnvironmentVariable(
+            _configuration["GoogleMailSettings:ClientSecret"]!);
+
+        var refreshToken = Environment.GetEnvironmentVariable(
+            _configuration["GoogleMailSettings:RefreshToken"]!);
+
+        var senderEmail = Environment.GetEnvironmentVariable(
+            _configuration["GoogleMailSettings:FromEmail"]!);
+
+        // DEBUG
+
+        //Console.WriteLine($"ClientId: {clientId}");
+        //Console.WriteLine($"ClientSecret: {clientSecret}");
+        //Console.WriteLine($"RefreshToken: {refreshToken}");
+        //Console.WriteLine($"SenderEmail: {senderEmail}");
+        //Console.WriteLine($"ToEmail: {toEmail}");
 
         var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
         {

@@ -49,10 +49,16 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommandRequest, Re
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        var baseUrl = _configuration["App:BaseUrl"];
+        var baseUrl = _configuration["AppSettings:ApiBaseUrl"];
+
+        //DEBUG
+        //Console.WriteLine($"App:BaseUrl = {baseUrl}");
+        //Console.WriteLine($"AppSettings:ApiBaseUrl = {_configuration["AppSettings:ApiBaseUrl"]}");
 
         var confirmLink =
             $"{baseUrl}/api/auth/confirm-email?email={user.Email}&token={Uri.EscapeDataString(token)}";
+
+        Console.WriteLine(confirmLink);
 
         await _emailService.SendEmailAsync(
             user.Email!,
