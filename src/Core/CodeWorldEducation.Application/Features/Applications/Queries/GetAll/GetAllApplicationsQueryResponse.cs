@@ -1,14 +1,9 @@
-﻿using CodeWorldEducation.Application.Common.Application;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CodeWorldEducation.Application.Common.Applications;
 
 namespace CodeWorldEducation.Application.Features.Applications.Queries.GetAll
 {
     public class GetAllApplicationsQueryResponse
     {
-        public List<GetApplicationDto> Applications { get; set; }
+        public List<GetApplicationDto> Applications { get; set; } = new();
     }
 }

@@ -6,6 +6,7 @@ using CodeWorldEducation.Application.Features.Courses.Commands.Delete;
 using CodeWorldEducation.Application.Features.Courses.Commands.Update;
 using CodeWorldEducation.Application.Features.Courses.Queries.GetAllCourses;
 using CodeWorldEducation.Application.Features.Courses.Queries.GetCourseById;
+using CodeWorldEducation.Application.Features.Courses.Queries.GetCoursesDropdown;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -73,5 +74,14 @@ namespace CodeWorldEducation.API.Controllers
                 new GetCourseDetailQueryRequest { Slug = slug });
             return Ok(response);
         }
+
+        // GET /api/courses/dropdown
+        [HttpGet("dropdown")]
+        public async Task<IActionResult> GetDropdown()
+        {
+            var response = await _mediator.Send(new GetCoursesDropdownQueryRequest());
+            return Ok(response);
+        }
+
     }
 }

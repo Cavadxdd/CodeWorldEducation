@@ -8,9 +8,8 @@ namespace CodeWorldEducation.Domain.Enums
 {
     public enum ApplicationStatus
     {
-        New = 0,
-        Reviewed = 1,
-        Contacted = 2,
-        Rejected = 3
+        Pending = 0,
+        Approved = 1,
+        Rejected = 2
     }
 }

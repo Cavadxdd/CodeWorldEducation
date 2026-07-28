@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
 using CodeWorldEducation.Application.Abstraction.Services;
-using CodeWorldEducation.Application.Common.Application;
 using CodeWorldEducation.Application.Common.Applications;
 using CodeWorldEducation.Application.Helpers;
 using CodeWorldEducation.Application.UnitOfWorks;
 using CodeWorldEducation.Domain.Enums;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Persistence.Services
 {
@@ -19,118 +13,119 @@ namespace CodeWorldEducation.Persistence.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<ApplicationService> _logger;
+        private readonly IFileService _fileService;
 
-        public ApplicationService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ApplicationService> logger)
+        public ApplicationService(IUnitOfWork unitOfWork, IMapper mapper,
+            ILogger<ApplicationService> logger, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _fileService = fileService;
         }
 
-        public async Task<List<GetApplicationDto>> GetAllAsync()
+        public async Task<List<GetApplicationDto>> GetAllAsync(
+            ApplicantType? type = null, ApplicationStatus? status = null)
         {
             var applications = await _unitOfWork.ApplicationRepository.GetAllAsync();
-            _logger.LogInformation(
-          "All applications retrieved. Count: {Count}",
-          applications.Count);
+
+            if (type.HasValue)
+                applications = applications.Where(a => a.ApplicantType == type.Value).ToList();
+
+            if (status.HasValue)
+                applications = applications.Where(a => a.Status == status.Value).ToList();
+
             return _mapper.Map<List<GetApplicationDto>>(applications);
         }
 
         public async Task<GetApplicationDto> GetByIdAsync(int id)
         {
-            if (id <= 0)
-                throw new ArgumentException("Id must be greater than 0");
-
             var application = await _unitOfWork.ApplicationRepository.GetByIdAsync(id);
             if (application == null)
                 throw new Exception($"Application with id {id} not found");
-
-            _logger.LogInformation(
-           "Application retrieved. Id: {Id} | ApplicantType: {ApplicantType}",
-           application.Id,
-           application.ApplicantType);
 
             return _mapper.Map<GetApplicationDto>(application);
         }
 
         public async Task<GetApplicationDto> CreateAsync(CreateApplicationDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.FirstName))
-                throw new ArgumentException("First name cannot be empty");
+            if (string.IsNullOrWhiteSpace(dto.FullName))
+                throw new ArgumentException("FullName cannot be empty");
 
-            if (string.IsNullOrWhiteSpace(dto.LastName))
-                throw new ArgumentException("Last name cannot be empty");
+            if (string.IsNullOrWhiteSpace(dto.PhoneNumber))
+                throw new ArgumentException("PhoneNumber cannot be empty");
 
-            if (string.IsNullOrWhiteSpace(dto.Phone))
-                throw new ArgumentException("Phone cannot be empty");
+            if (dto.ApplicantType == ApplicantType.Student && dto.EducationMode == null)
+                throw new ArgumentException("EducationMode is required for Student");
 
-            if (dto.ApplicantType == ApplicantType.Student && dto.CourseId == null)
-                throw new ArgumentException("Course must be selected for student applicants");
-
-            if (dto.ApplicantType == ApplicantType.Intern &&
-                string.IsNullOrWhiteSpace(dto.Field))
-                throw new ArgumentException("Field must be specified for intern applicants");
-
-            if (dto.CourseId.HasValue)
-            {
-                var course = await _unitOfWork.CourseRepository.GetByIdAsync(dto.CourseId.Value);
-                if (course == null)
-                    throw new Exception($"Course with id {dto.CourseId} not found");
-            }
+            if (dto.ApplicantType == ApplicantType.Internship && dto.CvFile == null)
+                throw new ArgumentException("CV is required for Internship");
 
             var application = _mapper.Map<Domain.Entities.Application>(dto);
+
+            if (dto.CvFile != null)
+            {
+                var (fileName, filePath) = await _fileService.UploadCvAsync(dto.CvFile);
+                application.CvFilePath = filePath;
+                application.CvOriginalFileName = fileName;
+            }
+
+            application.Status = ApplicationStatus.Pending;
             application.SubmittedAt = DateTime.UtcNow;
-            application.Status = ApplicationStatus.New;
             application.CreatedAt = DateTime.UtcNow;
             application.UpdatedAt = DateTime.UtcNow;
-
-            application.WhatsAppMessage = WhatsAppHelper.GenerateMessage(dto);
-            application.WhatsAppRedirectUrl = WhatsAppHelper.GenerateUrl(application.WhatsAppMessage);
 
             await _unitOfWork.ApplicationRepository.AddAsync(application);
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation(
-            "Application created. Id: {Id} | ApplicantType: {ApplicantType} | " +
-            "FullName: {FullName} | SubmittedAt: {SubmittedAt}",
-            application.Id,
-            application.ApplicantType,
-            $"{application.FirstName} {application.LastName}",
-            application.SubmittedAt);
+            _logger.LogInformation("Application created. Id: {Id} | Type: {Type}",
+                application.Id, application.ApplicantType);
 
             return _mapper.Map<GetApplicationDto>(application);
         }
 
-        public async Task<GetApplicationDto> UpdateAsync(UpdateApplicationDto dto)
+        public async Task<GetApplicationDto> ApproveAsync(int id, string reviewedBy)
         {
-            if (dto.Id <= 0)
-                throw new ArgumentException("Id must be greater than 0");
-
-            var application = await _unitOfWork.ApplicationRepository.GetByIdAsync(dto.Id);
+            var application = await _unitOfWork.ApplicationRepository.GetByIdAsync(id);
             if (application == null)
-                throw new Exception($"Application with id {dto.Id} not found");
+                throw new Exception($"Application with id {id} not found");
 
-            application.Status = dto.Status;
+            application.Status = ApplicationStatus.Approved;
+            application.ReviewedAt = DateTime.UtcNow;
+            application.ReviewedBy = reviewedBy;
             application.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.ApplicationRepository.Update(application);
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation(
-            "Application status updated. Id: {Id} |  " +
-            "NewStatus: {NewStatus} | UpdatedAt: {UpdatedAt}",
-            application.Id,
-            application.Status,
-            application.UpdatedAt);
+            _logger.LogInformation("Application approved. Id: {Id} | ReviewedBy: {ReviewedBy}",
+                id, reviewedBy);
+
+            return _mapper.Map<GetApplicationDto>(application);
+        }
+
+        public async Task<GetApplicationDto> RejectAsync(int id, string reviewedBy)
+        {
+            var application = await _unitOfWork.ApplicationRepository.GetByIdAsync(id);
+            if (application == null)
+                throw new Exception($"Application with id {id} not found");
+
+            application.Status = ApplicationStatus.Rejected;
+            application.ReviewedAt = DateTime.UtcNow;
+            application.ReviewedBy = reviewedBy;
+            application.UpdatedAt = DateTime.UtcNow;
+
+            _unitOfWork.ApplicationRepository.Update(application);
+            await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation("Application rejected. Id: {Id} | ReviewedBy: {ReviewedBy}",
+                id, reviewedBy);
 
             return _mapper.Map<GetApplicationDto>(application);
         }
 
         public async Task DeleteAsync(int id)
         {
-            if (id <= 0)
-                throw new ArgumentException("Id must be greater than 0");
-
             var application = await _unitOfWork.ApplicationRepository.GetByIdAsync(id);
             if (application == null)
                 throw new Exception($"Application with id {id} not found");
@@ -138,14 +133,7 @@ namespace CodeWorldEducation.Persistence.Services
             _unitOfWork.ApplicationRepository.Delete(application);
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogWarning(
-            "Application deleted. Id: {Id} | FullName: {FullName} | " +
-            "ApplicantType: {ApplicantType} | DeletedAt: {DeletedAt}",
-            application.Id,
-            $"{application.FirstName} {application.LastName}",
-            application.ApplicantType,
-            DateTime.UtcNow);
+            _logger.LogWarning("Application deleted. Id: {Id}", id);
         }
-
     }
 }

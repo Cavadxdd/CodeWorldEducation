@@ -1,12 +1,6 @@
-﻿using CodeWorldEducation.Domain.Enums;
+﻿using CodeWorldEducation.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using CodeWorldEducation.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Persistence.Configurations
 {
@@ -14,40 +8,27 @@ namespace CodeWorldEducation.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Domain.Entities.Application> builder)
         {
-            builder.ToTable("Applications");
+            builder.HasKey(a => a.Id);
 
-            builder.HasKey(e => e.Id);
-
-            builder.Property(e => e.CreatedAt).IsRequired();
-            builder.Property(e => e.UpdatedAt).IsRequired();
-            builder.Property(e => e.IsDeleted).IsRequired().HasDefaultValue(false);
-            builder.HasQueryFilter(e => !e.IsDeleted);
-
-            builder.Property(a => a.FirstName)
+            builder.Property(a => a.FullName)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.Property(a => a.LastName)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            builder.Property(a => a.Phone)
+            builder.Property(a => a.PhoneNumber)
                 .IsRequired()
                 .HasMaxLength(20);
 
             builder.Property(a => a.ApplicantType)
                 .IsRequired();
 
-            builder.Property(a => a.Field)
-                .HasMaxLength(100);
-
-            builder.Property(a => a.TeachingMode);
-
-            builder.Property(a => a.GitHubUrl)
-                .HasMaxLength(255);
+            builder.Property(a => a.EducationMode)
+                .IsRequired(false);
 
             builder.Property(a => a.BehanceUrl)
-                .HasMaxLength(255);
+                .HasMaxLength(300);
+
+            builder.Property(a => a.DribbbleUrl)
+                .HasMaxLength(300);
 
             builder.Property(a => a.CvFilePath)
                 .HasMaxLength(500);
@@ -55,22 +36,20 @@ namespace CodeWorldEducation.Persistence.Configurations
             builder.Property(a => a.CvOriginalFileName)
                 .HasMaxLength(255);
 
+            builder.Property(a => a.Note)
+                .HasMaxLength(1000);
+
             builder.Property(a => a.Status)
-                .IsRequired()
-                .HasDefaultValue(ApplicationStatus.New);
+                .IsRequired();
+
+            builder.Property(a => a.ReviewedBy)
+                .HasMaxLength(100);
 
             builder.Property(a => a.WhatsAppMessage)
-                .HasMaxLength(500);
+                .HasMaxLength(1000);
 
             builder.Property(a => a.WhatsAppRedirectUrl)
-                .HasMaxLength(500);
-
-            builder.Property(a => a.SubmittedAt)
-                .IsRequired()
-                .HasDefaultValue(DateTime.UtcNow);
-
-            builder.Property(a => a.IpAddress)
-                .HasMaxLength(45);
+                .HasMaxLength(1000);
 
             builder.HasOne(a => a.Course)
                 .WithMany(c => c.Applications)

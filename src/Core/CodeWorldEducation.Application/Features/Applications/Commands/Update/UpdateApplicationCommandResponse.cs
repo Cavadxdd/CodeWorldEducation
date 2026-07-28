@@ -1,4 +1,4 @@
-﻿using CodeWorldEducation.Application.Common.Application;
+﻿using CodeWorldEducation.Application.Common.Applications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,8 @@ namespace CodeWorldEducation.Application.Features.Applications.Commands.Update
 {
     public class UpdateApplicationCommandResponse
     {
-        public GetApplicationDto Application { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; } = null!;
+        public GetApplicationDto? Application { get; set; }
     }
 }

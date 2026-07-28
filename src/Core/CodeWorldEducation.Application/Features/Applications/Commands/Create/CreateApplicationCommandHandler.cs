@@ -1,14 +1,10 @@
 ﻿using CodeWorldEducation.Application.Abstraction.Services;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Application.Features.Applications.Commands.Create
 {
-    public class CreateApplicationCommandHandler : IRequestHandler<CreateApplicationCommandRequest, CreateApplicationCommandResponse>
+    public class CreateApplicationCommandHandler
+        : IRequestHandler<CreateApplicationCommandRequest, CreateApplicationCommandResponse>
     {
         private readonly IApplicationService _applicationService;
 
@@ -22,7 +18,12 @@ namespace CodeWorldEducation.Application.Features.Applications.Commands.Create
             CancellationToken cancellationToken)
         {
             var result = await _applicationService.CreateAsync(request.Dto);
-            return new CreateApplicationCommandResponse { Application = result };
+            return new CreateApplicationCommandResponse
+            {
+                Success = true,
+                Message = "Müraciətiniz uğurla qəbul edildi.",
+                Application = result
+            };
         }
     }
 }

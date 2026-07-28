@@ -4,21 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace CodeWorldEducation.Application.Common.Application
+namespace CodeWorldEducation.Application.Common.Applications
 {
     public class CreateApplicationDto
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Phone { get; set; }
+        public string FullName { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
         public ApplicantType ApplicantType { get; set; }
-        public int? CourseId { get; set; }
-        public string? Field { get; set; }
-        public TeachingMode? TeachingMode { get; set; }
-        public string? GitHubUrl { get; set; }
+        public int CourseId { get; set; }
+        public TeachingMode? EducationMode { get; set; }
         public string? BehanceUrl { get; set; }
-        public string? CvFilePath { get; set; }
-        public string? CvOriginalFileName { get; set; }
+        public string? DribbbleUrl { get; set; }
+        public IFormFile? CvFile { get; set; }
+        public string? Note { get; set; }
     }
 }

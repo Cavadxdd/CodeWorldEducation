@@ -1,14 +1,11 @@
-﻿using CodeWorldEducation.Application.Common.Application;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CodeWorldEducation.Application.Common.Applications;
 
 namespace CodeWorldEducation.Application.Features.Applications.Commands.Create
 {
     public class CreateApplicationCommandResponse
     {
-        public GetApplicationDto Application { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; } = null!;
+        public GetApplicationDto? Application { get; set; }
     }
 }

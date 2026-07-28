@@ -1,15 +1,10 @@
 ﻿using CodeWorldEducation.Application.Abstraction.Services;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Application.Features.Applications.Commands.Update
 {
     public class UpdateApplicationCommandHandler
-    : IRequestHandler<UpdateApplicationCommandRequest, UpdateApplicationCommandResponse>
+        : IRequestHandler<UpdateApplicationCommandRequest, UpdateApplicationCommandResponse>
     {
         private readonly IApplicationService _applicationService;
 
@@ -22,8 +17,12 @@ namespace CodeWorldEducation.Application.Features.Applications.Commands.Update
             UpdateApplicationCommandRequest request,
             CancellationToken cancellationToken)
         {
-            var result = await _applicationService.UpdateAsync(request.Dto);
-            return new UpdateApplicationCommandResponse { Application = result };
+            if (request.Dto.Status == Domain.Enums.ApplicationStatus.Approved)
+                await _applicationService.ApproveAsync(request.Dto.Id, request.Dto.ReviewedBy ?? "Admin");
+            else
+                await _applicationService.RejectAsync(request.Dto.Id, request.Dto.ReviewedBy ?? "Admin");
+
+            return new UpdateApplicationCommandResponse { Success = true, Message = "Status yeniləndi." };
         }
     }
 }

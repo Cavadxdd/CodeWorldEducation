@@ -1,12 +1,5 @@
 ﻿using AutoMapper;
-using CodeWorldEducation.Application.Common.Application;
 using CodeWorldEducation.Application.Common.Applications;
-using CodeWorldEducation.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeWorldEducation.Application.Mappings
 {
@@ -14,18 +7,13 @@ namespace CodeWorldEducation.Application.Mappings
     {
         public ApplicationProfile()
         {
-            CreateMap<Domain.Entities.Application, GetApplicationDto>()
+            CreateMap<CodeWorldEducation.Domain.Entities.Application, GetApplicationDto>()
                 .ForMember(dest => dest.CourseName,
-                    opt => opt.MapFrom(src =>
-                        src.Course != null ? src.Course.Name : null));
+                    opt => opt.MapFrom(src => src.Course != null ? src.Course.Name : null));
 
-            CreateMap<CreateApplicationDto, Domain.Entities.Application>()
-                .ForMember(dest => dest.Status,
-                    opt => opt.MapFrom(src => ApplicationStatus.New))
-                .ForMember(dest => dest.SubmittedAt,
-                    opt => opt.MapFrom(src => DateTime.UtcNow));
-
-            CreateMap<UpdateApplicationDto, Domain.Entities.Application>();
+            CreateMap<CreateApplicationDto, CodeWorldEducation.Domain.Entities.Application>()
+                .ForMember(dest => dest.CvFilePath, opt => opt.Ignore())
+                .ForMember(dest => dest.CvOriginalFileName, opt => opt.Ignore());
         }
     }
 }

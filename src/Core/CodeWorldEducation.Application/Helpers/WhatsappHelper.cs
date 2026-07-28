@@ -1,11 +1,6 @@
-﻿using CodeWorldEducation.Application.Common.Application;
+﻿using CodeWorldEducation.Application.Common.Applications;
 using CodeWorldEducation.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+    
 namespace CodeWorldEducation.Application.Helpers
 {
     public static class WhatsAppHelper
@@ -16,22 +11,19 @@ namespace CodeWorldEducation.Application.Helpers
         {
             if (dto.ApplicantType == ApplicantType.Student)
             {
-                return $"Salam, mən {dto.FirstName} {dto.LastName}. " +
-                       $"{dto.TeachingMode} tələbə olaraq müraciət etdim. " +
-                       $"Məlumatlarım sistemə yükləndi.";
+                var mode = dto.EducationMode == TeachingMode.Online ? "Onlayn" : "Əyani";
+                return $"Salam, mən {dto.FullName}. Kurs müraciəti ({mode}) göndərdim.";
             }
             else
             {
-                return $"Salam, mən {dto.FirstName} {dto.LastName}. " +
-                       $"{dto.Field} üzrə təcrübə proqramına müraciət etdim. " +
-                       $"CV və portfolio linklərim sistemə uğurla yükləndi.";
+                return $"Salam, mən {dto.FullName}. Təcrübə proqramına müraciət etdim. CV və portfolio linklərim sistemə yükləndi.";
             }
         }
 
         public static string GenerateUrl(string message)
         {
-            var encodedMessage = Uri.EscapeDataString(message);
-            return $"https://wa.me/{PhoneNumber}?text={encodedMessage}";
+            var encoded = Uri.EscapeDataString(message);
+            return $"https://wa.me/{PhoneNumber}?text={encoded}";
         }
     }
 }

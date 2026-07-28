@@ -11,7 +11,6 @@ namespace CodeWorldEducation.Application.Common.Applications
     {
         public int Id { get; set; }
         public ApplicationStatus Status { get; set; }
-        public string? WhatsAppMessage { get; set; }
-        public string? WhatsAppRedirectUrl { get; set; }
+        public string? ReviewedBy { get; set; }
     }
 }
